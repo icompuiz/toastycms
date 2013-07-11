@@ -1,0 +1,30 @@
+#management-content {
+	background: none;
+	box-shadow: none;
+	width: 400px;
+	margin: 0 auto;
+}
+
+#management-right {
+	background: #fff;
+	box-shadow: 0 0 5px #333;
+	padding: 20px;
+	position: absolute;
+
+	width: 400px;
+
+}
+
+#UserManagementLoginForm legend {
+	text-align: center;
+}
+
+#UserManagementLoginForm .input {
+	width: 220px;
+	margin: 0 auto;
+	overflow: hidden
+}
+
+.submitLogin {
+	
+}

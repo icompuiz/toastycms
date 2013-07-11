@@ -1,0 +1,242 @@
+/* 
+    Document   : management
+    Created on : May 23, 2013, 3:22:00 PM
+    Author     : innod_000
+    Description:
+        These are custom styles for the ToastyCMS site management portal
+*/
+
+body {
+    background: url('../img/bg.gif') repeat;
+}
+
+.tdebug {
+    box-shadow: inset 0px 0px 3px #990099;
+}
+
+header {
+    margin-bottom: 10px
+}
+
+.flash-message {
+    text-align: center;
+}
+
+#management-content {
+    padding: 10px;
+    padding-bottom: 0px;
+    background: white;
+    box-shadow: 0 0 5px #333333;
+}
+
+.navigator {
+    margin-bottom: 10px;
+}
+
+
+
+.navigator hr {
+    margin: 10px 0;
+}
+
+.navigator ul {
+    list-style: none;
+    margin-left: 0;
+}
+
+.navigator li.sidebar-list-item {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+.tlist {
+    padding: 0 10px;
+}
+
+.sidebar-list-item ul {
+    margin-left: 10px;
+}
+
+.sidebar-header {
+    padding: 0 10px;
+    font-size: .9em;
+}
+
+.sidebar-header p {
+    margin-bottom: 0;
+}
+
+.navigator .nav-tabs 
+{
+    margin-bottom: 0;
+}
+
+.nav-header {
+    text-transform: none;
+}
+.navigator .tab-content 
+{
+
+    border-radius: 4px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+
+    border: 1px solid #ddd;
+    border-top: none;
+    padding: 10px;
+
+    overflow: visible;
+}
+
+
+.navigator .tab-content .collapsed, .navigator .tab-content .expanded {
+    margin-right: 5px;
+    font-size: 9px;
+    position: relative;
+    top: -2px;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.navigator .tab-content .expanded {
+    display: none;
+}
+
+.navigator .btn-toolbar 
+{
+    width: 99%;
+    margin: 0 auto;
+    margin-top: 5px;
+}
+
+.navigator .tab-pane.well {
+    padding: 3px;
+    padding-top: 0px;
+    margin-bottom: 0px;
+}
+
+#content-navigator {}
+
+#dashboard-navigator {}
+
+#add-content-navigator {
+
+}
+
+.content-navigator #settings-tab {
+    padding-left: 10px;
+}
+
+.c-label, .c-value {
+    float: left;
+    padding: 5px;
+
+}
+.c-label {
+    width: 100px;
+}
+
+.c-value {
+    margin-left: 10px;
+}
+
+.controls {
+    position: relative;
+    margin: 0;
+    top: 0px;
+}
+
+#content-controls.btn-toolbar, #account-controls.btn-toolbar {
+    margin: 0;
+}
+
+.sidebar-add-control,  
+.navigator-dropdown-toggle {
+    height: 15px;
+    width: 15px;
+    font-size: 10px;
+    padding: 0;
+    line-height: 15px;   
+}
+
+.sidebar-add-control i,  
+.navigator-dropdown-toggle  i {
+    margin: 0;
+    font-weight: normal;
+    color: #777;
+    text-shadow: 1px 1px 1px white;
+}
+
+.list-item-content:hover {
+    background: #E8E8E8;
+
+}
+
+.sidebar-list-item .no-collapse {
+    margin-left: 12px;
+}
+
+.sidebar-add-control, 
+.navigator-dropdown-toggle {
+    background: none;
+    border: none;
+    box-shadow: none;
+}
+
+#select-content-type-tab h3 {
+    margin-left: 30px
+}
+#select-content-type-tab {
+    padding-top: 10px;
+    
+}
+
+
+
+#select-content-type-tab .thumbnail a:hover {
+    text-decoration: none;
+}
+#select-content-type-tab .thumbnail {
+
+
+    box-shadow: none;
+}
+
+#select-content-type-tab .thumbnail:hover {
+
+    background: #ddd;
+
+    -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.055);
+    -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.055);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.055);
+}
+
+.page-controls {
+    margin-bottom: 10px;
+}
+
+#settings-navigator .setting-name,
+#settings-navigator .setting-value,
+#settings-navigator .setting-header.setting-actions
+{
+    
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.2em;
+
+}
+#settings-navigator .setting-header.setting-actions,
+#settings-navigator .setting-actions {
+    
+    text-align: right;
+}
+
+#settings-navigator .setting {
+    margin-bottom: 10px;
+}
+
+#settingsReturn {
+    margin-bottom: 5px;
+}
