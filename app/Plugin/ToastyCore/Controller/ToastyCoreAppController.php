@@ -40,7 +40,7 @@ class ToastyCoreAppController extends AppController {
 
         if (empty($salt) || empty($seed)) {
 
-            pr("Security.salt or Security.cipherSeed values not set in app/Config/core.php");
+            pr("Security.salt or Security.cipherSeed values not set in app/Config/core.security.php");
             pr("Auth is disabled until these values are set.");
 
             $this->Components->unload('Auth');
