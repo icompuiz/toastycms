@@ -65,6 +65,9 @@ if (!file_exists(CONFIG_DIR  . DS . 'core.security.php')) {
 
 	if (!$cs) {
 		throw new Exception("FAILED to create core.security.php. Check directory permissions");
+	} else {
+		
+		chmod($core_security_file, 0755);
 	}
 
 }
