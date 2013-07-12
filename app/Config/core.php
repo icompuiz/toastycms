@@ -197,15 +197,18 @@
 		'defaults' => 'php'
 	));
 
-/**
- * A random string used in security hashing methods.
- */
-	Configure::write('Security.salt', '');
+	require(CORE_SECURITY_FILE);
 
-/**
- * A random numeric string (digits only) used to encrypt/decrypt strings.
- */
-	Configure::write('Security.cipherSeed', '');
+	/**
+	* A random string used in security hashing methods.
+	*/
+	Configure::write('Security.salt', $salt);
+
+	/**
+	* A random numeric string (digits only) used to encrypt/decrypt strings.
+	*/
+	Configure::write('Security.cipherSeed', $cipher_seed);
+
 
 /**
  * Apply timestamps with the last modified time to static assets (js, css, images).

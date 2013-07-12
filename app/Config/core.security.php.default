@@ -1,0 +1,12 @@
+<?php
+
+	/**
+	* A random string used in security hashing methods.
+	*/
+
+	$salt = '';
+
+	/**
+	* A random numeric string (digits only) used to encrypt/decrypt strings.
+	*/
+	$cipher_seed = '';

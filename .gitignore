@@ -13,6 +13,7 @@ app/webroot/js
 app/Plugin/ToastyCore/tmp_files/*
 app/Plugin/ToastyCore/tmp_files/!.gitignore
 app/Config/database.php
+app/Config/core.security.php
 app/View/ContentTemplates
 app/Test
 app/Vendor

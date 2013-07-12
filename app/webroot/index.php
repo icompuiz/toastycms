@@ -51,6 +51,24 @@ if (!defined('APP_DIR')) {
 	define('APP_DIR', basename(dirname(dirname(__FILE__))));
 }
 
+if (!defined('CONFIG_DIR')) {
+	define('CONFIG_DIR', ROOT . DS . APP_DIR . DS . 'Config');
+}
+
+$core_security_file = CONFIG_DIR  . DS . 'core.security.php';
+define(CORE_SECURITY_FILE, $core_security_file);
+
+if (!file_exists(CONFIG_DIR  . DS . 'core.security.php')) {
+
+	$default_core_security_file = CONFIG_DIR  . DS . 'core.security.php.default';
+	$cs = copy($default_core_security_file, $core_security_file);
+
+	if (!$cs) {
+		throw new Exception("FAILED to create core.security.php. Check directory permissions");
+	}
+
+}
+
 /**
  * The absolute path to the "cake" directory, WITHOUT a trailing DS.
  *
