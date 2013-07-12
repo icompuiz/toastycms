@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 
 # Git Update script
 # overrites all local changes not protected by .gitignore
