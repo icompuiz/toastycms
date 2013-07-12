@@ -271,7 +271,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`username`, `password`, `group_id`, `created`, `modified`, `email`, `status`, `type`) VALUES
+INSERT INTO `users` (`id`, `username`, `password`, `group_id`, `created`, `modified`, `email`, `status`, `type`) VALUES
 (1, 'root', '', 1, '2013-05-23 13:58:16', '2013-07-06 00:06:24', '', 'active', 'root');
 
 -- --------------------------------------------------------
