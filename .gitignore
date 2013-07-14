@@ -15,6 +15,7 @@ app/Plugin/ToastyCore/tmp_files/!.gitignore
 app/Config/database.php
 app/Config/core.security.php
 app/View/ContentTemplates
+app/View/Elements
 app/Test
 app/Vendor
 media.sql

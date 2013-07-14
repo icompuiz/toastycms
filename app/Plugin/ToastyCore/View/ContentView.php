@@ -13,16 +13,28 @@ class ContentView extends View {
 	public function snippet($snippet_name, $options = array()) {
 
 		return $this->Snippet->render($snippet_name, $options);
-		
+
 	}
 
-	public function property($property_name) {
+	public function property($arg1, $arg2 = null) {
 
+		$output = "";
+		if (!$arg2) {
 
-		$variable = $this->getVar($property_name);
-		return $this->Property->output($variable);
+			$property_name = $arg1;
+			$variable = $this->getVar($property_name);
+			$output = $this->Property->output($variable);
 
+		} else {
 
+			$content_id = $arg1;
+			$property_name = $arg2;
+			$output = $this->Property->output($content_id, $property_name);
+
+		}
+
+		return $output;
+		
 	}
 
 	public function setting($setting_name) {
@@ -47,13 +59,49 @@ class ContentView extends View {
 
 	}
 
-	public function getContent($content_id) {
+	public function getContent($arg1, $arg2 = array()) {
 
 		$content = $this->c->Content;
+		
+		$output = array();
 
-		return $content->findById($content_id);
+		if (is_numeric($arg1)) {
+
+			$content_id = $arg1;
+
+			$output = $content->findById($content_id);
+
+			return $output;
+
+		}
+
+		if (is_array($arg2)) {
+
+			$scope = $arg1;
+
+			$options = $arg2;
+
+			$output = $content->find($scope, $options);
+			
+			return $output;
+
+		} 
 
 
+
+	}
+
+	public function implode_associative($pieces) {
+		$output = "";
+
+		if (null !== $pieces ) {
+			foreach ($pieces as $key => $value) {
+				$output .= "$key=\"$value\"";
+			}
+		}
+
+		$output = " " . trim($output);
+		return $output;
 
 	}
 }
