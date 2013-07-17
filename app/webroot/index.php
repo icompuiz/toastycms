@@ -56,9 +56,9 @@ if (!defined('CONFIG_DIR')) {
 }
 
 $core_security_file = CONFIG_DIR  . DS . 'core.security.php';
-define(CORE_SECURITY_FILE, $core_security_file);
+define('CORE_SECURITY_FILE', $core_security_file);
 
-if (!file_exists(CONFIG_DIR  . DS . 'core.security.php')) {
+if (!file_exists(CORE_SECURITY_FILE)) {
 
 	$default_core_security_file = CONFIG_DIR  . DS . 'core.security.php.default';
 	$cs = copy($default_core_security_file, $core_security_file);
