@@ -1,4 +1,4 @@
-<?
+<?php
 $this->start('management-flash');
 echo $this->Session->flash('flash', array('element' => 'ToastyCore.content_error'));
 $this->end();
@@ -28,7 +28,6 @@ $snippet_add_url = Router::url(array('controller' => 'snippets', 'action' => 'ad
 $ctype_delete_link = $this->Form->postLink(__('Delete'), array('controller' => 'content_types', 'action' => 'delete', 'management' => true), null, __('Are you sure you want to delete? This action is irreversable.'));
 $ctempl_delete_link = $this->Form->postLink(__('Delete'), array('controller' => 'content_templates', 'action' => 'delete', 'management' => true), null, __('Are you sure you want to delete? This action is irreversable.'));
 $content_delete_link = $this->Form->postLink(__('Delete'), array('controller' => 'contents', 'action' => 'delete', 'management' => true), null, __('Are you sure you want to delete? This action is irreversable.'));
-
 $this->start('management-left');
 ?>
 
