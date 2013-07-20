@@ -155,6 +155,23 @@ $this->start('management-right');
                 <div class="row">
                        
                        
+                       <div id="content-alias" class="span5">
+                        <div class="c-label">Sort:</div>
+                        <div class="c-value">
+                            <?php
+                            echo $this->Form->input('Content.sort', array(
+                                'label' => false,
+                                'error' => array('attributes' => array('wrap' => 'div', 'class' => 'alert'))
+                            ));
+                            ?>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+
+                <div class="row">
+                       
+                       
                         <div id="content-published" class="span5">
                             <div class="c-label">Published:</div>
                                 <div class="c-value">

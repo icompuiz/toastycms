@@ -269,7 +269,11 @@ class Content extends ToastyCoreAppModel {
         ),
         'ChildContent' => array(
             'className' => 'ToastyCore.Content',
-            'foreignKey' => 'parent_content_id'
+            'foreignKey' => 'parent_content_id',
+            'order' => array(
+                'ChildContent.sort',
+                'ChildContent.created'
+            )
         )
     );
 
@@ -421,6 +425,79 @@ class Content extends ToastyCoreAppModel {
 
         return $pid;
 
+
+    }
+
+    public function afterSave($created) {
+        parent::afterSave($created);
+
+        $this->sortSiblings($this->data['Content']['id']);
+    }
+
+    public function sortSiblings($content_id) {
+
+        $content_id = $this->checkId($content_id);
+
+        $content = $this->findById($content_id);
+
+        $options = array(
+            'conditions' => array(
+                'Content.parent_content_id' => $content['Content']['parent_content_id'],
+                'NOT' => array(
+                    'Content.id' => $content_id
+                )
+            ),
+            'order' => array(
+                'Content.sort',
+            )
+        );
+        $siblings = $this->find('all', $options);
+
+        $numSiblings = count($siblings);
+
+        $sorted = array();
+        $unsorted = array();
+
+        $counter = 0;
+        // separate unsorted items from sorted items
+        foreach($siblings as $sibling) {
+
+            if (0 === $sibling['Content']['sort']) {
+                $unsorted[] = $sibling;
+            } else {
+                $sorted[] = $sibling;
+                $counter++;
+            }
+
+        }
+
+        // give the unsorted items a sort value
+        foreach($unsorted as $sibling) {
+            $sorted[] = $sibling;
+            $counter++;
+        }
+
+        $sort = $this->data['Content']['sort'];
+
+        if ($sort >= $numSiblings + 1) {
+            // if the sort value is larger than the number of siblings
+            array_push($sorted, $content); // put it at the end
+        } elseif ($sort <= 1) {
+            // if the sort value is less than or equal to 1
+            array_unshift($sorted, $content); // put it in the front
+        } else {
+            // if the sort value is anything in between, 
+            array_splice($sorted, $sort - 1, 0, array($content)); // put it there wrap content in an array so unshift is inconsequential.
+        }
+
+        // go through the fully sorted array and save the final sort values to the db
+        $counter = 1;
+        foreach ($sorted as &$sibling) {
+            $this->read(null, $sibling['Content']['id']);
+            $this->saveField('sort', $counter, array('callbacks' => false));
+            $counter++;
+
+        }
 
     }
 
