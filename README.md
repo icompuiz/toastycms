@@ -17,20 +17,27 @@ Setting up a new instance of ToastyCMS2 in 8 easy steps:
         b. username
         c. password
         d. database name
-    7) SET THE DEFAULT SALT AND CIPHER SEED values in 
+    7) Browse to yourwebsite.com/
+    8) SET THE DEFAULT SALT AND CIPHER SEED values in 
         
-        app/Config/core.php on lines 203 and 208
+        app/Config/core.security.php on lines 203 and 208
         
         You can get some random values from: https://www.grc.com/passwords.htm
                 
-    8) After changing the salt and cipher seed values, SET THE ROOT ACCOUNT PASSWORD by navigating to
+    9) After changing the salt and cipher seed values, SET THE ROOT ACCOUNT PASSWORD by navigating to
         
         http://<your website>/<path to toastycms>/management/toasty_core/users/edit/1
         
     Authentication will be disabled until the Security.cipherseed and Security.salt values are updated and the root password
     is set
     
-    9) Start toasting a new website and leave comments, report bugs, and open issues here.
+    10) Start toasting a new website and leave comments, report bugs, and open issues here.
+    
+    
+Known issues:
+    - There are issues running ToastyCMS under a WAMP server. It was develped in a Linux environment and I made some 
+    assumptions about where executables may exist. Although I am not formally supporting running in a WAMP environment,
+    post any WAMP related issues in the issues section and I will take a look at it.
 
     
 
