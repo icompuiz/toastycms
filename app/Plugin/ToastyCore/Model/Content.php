@@ -310,7 +310,10 @@ class Content extends ToastyCoreAppModel {
 
         parent::beforeSave();
 
+
         $name = $this->data['Content']['name'];
+        
+        $this->sortSiblings($this->data['Content']['id']);
 
         if (!isset($this->data['Content']['alias'])) {
             $this->data['Content']['alias'] = preg_replace('~\W~', '_', $name);
@@ -320,6 +323,8 @@ class Content extends ToastyCoreAppModel {
             $this->data['Content']['alias'] = preg_replace('~\W~', '_', $name);
 
         }
+
+
 
         return true;
     }
@@ -428,17 +433,14 @@ class Content extends ToastyCoreAppModel {
 
     }
 
-    public function afterSave($created) {
-        parent::afterSave($created);
-
-        $this->sortSiblings($this->data['Content']['id']);
-    }
 
     public function sortSiblings($content_id) {
 
         $content_id = $this->checkId($content_id);
 
-        $content = $this->findById($content_id);
+        $content = $this->data;
+
+        $object = new Content();
 
         $options = array(
             'conditions' => array(
@@ -451,7 +453,7 @@ class Content extends ToastyCoreAppModel {
                 'Content.sort',
             )
         );
-        $siblings = $this->find('all', $options);
+        $siblings = $object->find('all', $options);
 
         $numSiblings = count($siblings);
 
@@ -477,7 +479,7 @@ class Content extends ToastyCoreAppModel {
             $counter++;
         }
 
-        $sort = $this->data['Content']['sort'];
+        $sort = $content['Content']['sort'];
 
         if ($sort >= $numSiblings + 1) {
             // if the sort value is larger than the number of siblings
@@ -492,9 +494,14 @@ class Content extends ToastyCoreAppModel {
 
         // go through the fully sorted array and save the final sort values to the db
         $counter = 1;
-        foreach ($sorted as &$sibling) {
-            $this->read(null, $sibling['Content']['id']);
-            $this->saveField('sort', $counter, array('callbacks' => false));
+        foreach ($sorted as $sibling) {
+
+            if ($content_id !== $sibling['Content']['id']) {
+                $sibling['Content']['sort'] = $counter;
+                $sibling['Content']['modified'] = false;
+                $object->save($sibling, array('callbacks' => false));
+            }
+
             $counter++;
 
         }
