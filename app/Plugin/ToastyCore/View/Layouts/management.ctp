@@ -16,6 +16,8 @@ $loginLink = $this->Html->link("Login", array('controller' => 'users', 'action' 
 $logoutLink = $this->Html->link("Logout", array('controller' => 'users', 'action' => 'logout', 'management' => true));
 $authLink = $loginLink;
 
+$siteLink = $this->Html->link($site_name, "/", array('class' => 'brand', 'target' => '_blank'));
+
 $settingsLink = $this->Html->link("Settings", array('controller' => 'settings', 'action' => 'index', 'management' => true));
 
 if ( $sessionActive ) {
@@ -54,7 +56,7 @@ if ( $sessionActive ) {
         <header id="management-header">
             <div id="site-nav" class="navbar  navbar-inverse navbar-static-top">
                 <div class="navbar-inner">
-                    <a class="brand"><?=$site_name?></a>
+                    <?=$siteLink?>
                     <ul class="nav pull-right">
                         <?php if ( $sessionActive ) { ?>
                         
