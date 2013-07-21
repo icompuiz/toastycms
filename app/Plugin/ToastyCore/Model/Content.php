@@ -312,6 +312,8 @@ class Content extends ToastyCoreAppModel {
 
 
         $name = $this->data['Content']['name'];
+        $name = trim($name);
+        $this->data['Content']['name'] = $name;
         
         if (isset($this->data['Content']['id'])) {
         	$this->sortSiblings($this->data['Content']['id']);
@@ -329,13 +331,11 @@ class Content extends ToastyCoreAppModel {
 
         if (!isset($this->data['Content']['alias'])) {
 			$alias = preg_replace('~\W~', '_', $name);
-			$alias = trim($alias);
 			$this->data['Content']['alias'] = $alias;
         }
 
         if ($this->isEmptyValue($this->data['Content']['alias'])) {
             $alias = preg_replace('~\W~', '_', $name);
-			$alias = trim($alias);
 			$this->data['Content']['alias'] = $alias;
 
         }
