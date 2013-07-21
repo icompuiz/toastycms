@@ -317,6 +317,7 @@ class Content extends ToastyCoreAppModel {
         
         if (isset($this->data['Content']['id'])) {
         	$this->sortSiblings($this->data['Content']['id']);
+        	$this->publishChildren($this->data['Content']['id']);
         } else {
         	$options = array(
         		'conditions' => array(
@@ -447,6 +448,30 @@ class Content extends ToastyCoreAppModel {
         return $pid;
 
 
+    }
+
+    public function publishChildren($content_id) {
+
+        $content_id = $this->checkId($content_id);
+
+        $content = $this->data;
+
+
+        if (isset($content['Content']['published'])) {
+
+    		$conditions =  array(
+
+                'Content.parent_content_id' => $content_id,
+    		);
+
+    		$fields = array(
+    			'Content.published' => $content['Content']['published']
+			);
+
+    		$this->updateAll($fields, $conditions);
+
+        }
+    	
     }
 
 

@@ -82,7 +82,7 @@ class PropertyBase extends ToastyCoreAppModel {
 
         $current = $this->findById($this->id);
 
-        debug($current[$this->alias]['value']);
+        // debug($current[$this->alias]['value']);
 
         $value = $current[$this->alias]['value'];
 
