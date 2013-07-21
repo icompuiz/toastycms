@@ -102,7 +102,7 @@ class ContentsController extends ToastyCoreAppController {
 
             if ($content) {
                 $this->Session->setFlash(__('The content has been saved'));
-                $this->redirect(array('action' => 'index', 'management' => true));
+                $this->redirect(array('action' => 'edit', $content['Content']['id'], 'management' => true));
             } else {
                 $this->Session->setFlash(__('The content could not be saved. Please, try again.'));
             }
