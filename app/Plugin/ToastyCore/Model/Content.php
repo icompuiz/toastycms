@@ -313,14 +313,30 @@ class Content extends ToastyCoreAppModel {
 
         $name = $this->data['Content']['name'];
         
-        $this->sortSiblings($this->data['Content']['id']);
+        if (isset($this->data['Content']['id'])) {
+        	$this->sortSiblings($this->data['Content']['id']);
+        } else {
+        	$options = array(
+        		'conditions' => array(
+        			'Content.parent_content_id' => $this->data['Content']['parent_content_id']
+    			)
+    		);
+
+    		$count = $this->find('count', $options);
+
+    		$this->data['Content']['sort'] = $count + 1;
+        }
 
         if (!isset($this->data['Content']['alias'])) {
-            $this->data['Content']['alias'] = preg_replace('~\W~', '_', $name);
+			$alias = preg_replace('~\W~', '_', $name);
+			$alias = trim($alias);
+			$this->data['Content']['alias'] = $alias;
         }
 
         if ($this->isEmptyValue($this->data['Content']['alias'])) {
-            $this->data['Content']['alias'] = preg_replace('~\W~', '_', $name);
+            $alias = preg_replace('~\W~', '_', $name);
+			$alias = trim($alias);
+			$this->data['Content']['alias'] = $alias;
 
         }
 
@@ -453,6 +469,7 @@ class Content extends ToastyCoreAppModel {
                 'Content.sort',
             )
         );
+
         $siblings = $object->find('all', $options);
 
         $numSiblings = count($siblings);
@@ -500,6 +517,8 @@ class Content extends ToastyCoreAppModel {
                 $sibling['Content']['sort'] = $counter;
                 $sibling['Content']['modified'] = false;
                 $object->save($sibling, array('callbacks' => false));
+            } else {
+            	$this->data['Content']['sort'] = $counter;
             }
 
             $counter++;
