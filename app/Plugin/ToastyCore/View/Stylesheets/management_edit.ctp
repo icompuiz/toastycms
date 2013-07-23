@@ -59,6 +59,25 @@
                        
                 <div id="stylesheet-name" class="span5">
                     
+                    <div class="c-label">Use in Editor:</div>
+                    <div class="c-value">
+                        <?php
+                        echo $this->Form->input('Stylesheet.editor_enabled', array(
+                            'label' => false,
+                            'error' => array('attributes' => array('wrap' => 'div', 'class' => 'alert'))
+                        ));
+                        ?>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+
+            </div>
+
+            <div class="row">
+                       
+                       
+                <div id="stylesheet-name" class="span5">
+                    
                     <div class="c-label">URL:</div>
                     <div class="c-value">
                         <?php
@@ -69,6 +88,8 @@
                 </div>
 
             </div>
+
+
 
 
 

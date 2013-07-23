@@ -313,3 +313,4 @@ CREATE TABLE IF NOT EXISTS `user_property_skels` (
 
 
 alter table contents add column sort int(11);
+alter table stylesheets add column editor_enabled tinyint(1);

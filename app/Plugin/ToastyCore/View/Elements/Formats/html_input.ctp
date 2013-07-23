@@ -30,7 +30,7 @@
 App::uses('Stylesheet', 'ToastyCore.Model');
 $model = new Stylesheet();
 
-$tmp = $model->find('list', array('fields' => array('Stylesheet.system_path')));
+$tmp = $model->find('list', array('conditions' => array('Stylesheet.editor_enabled' => true),'fields' => array('Stylesheet.system_path')));
 $stylesheets = array();
 $basePath = Router::url("/css/");
 foreach ($tmp as $stylesheet) {
