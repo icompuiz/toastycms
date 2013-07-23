@@ -56,7 +56,7 @@ class StylesheetsController extends ToastyCoreAppController {
         // debug($root); exit;
         $this->set(array('stylesheets' => $root));
 
-	} 
+	}
 
 	public function management_add() {
 

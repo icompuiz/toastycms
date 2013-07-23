@@ -26,10 +26,25 @@
 </div>
 
 <?php
+
+App::uses('Stylesheet', 'ToastyCore.Model');
+$model = new Stylesheet();
+
+$tmp = $model->find('list', array('fields' => array('Stylesheet.system_path')));
+$stylesheets = array();
+$basePath = Router::url("/css/");
+foreach ($tmp as $stylesheet) {
+	$stylesheets[] = "'$basePath$stylesheet'";
+}
+$stylesheets = join(",", $stylesheets);
+
 $this->start("script");
 
 	echo $this->Html->script('ToastyCore.ckeditor/ckeditor');
 	echo $this->Html->scriptBlock("
+		CKEDITOR.config.allowedContent = true;
+		CKEDITOR.config.extraPlugins = 'stylesheetparser';
+		CKEDITOR.config.contentsCss = [$stylesheets]; 
 		CKEDITOR.replace( '$name' );
 	");
 
