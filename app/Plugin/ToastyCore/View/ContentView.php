@@ -23,7 +23,9 @@ class ContentView extends View {
 
 			$property_name = $arg1;
 			$variable = $this->getVar($property_name);
-			$output = $this->Property->output($variable);
+			if (!empty($variable)) {
+				$output = $this->Property->output($variable);
+			}
 
 		} else {
 
