@@ -5,7 +5,7 @@ New, Improved, and simplified version of ToastyCMS
 
 More details to come, but if you get here early follow the steps below to get started.
 
-Setting up a new instance of ToastyCMS2 in 8 easy steps:
+Setting up a new instance of ToastyCMS2 in 10 easy steps:
 
     1) Download or clone the repository
     2) Move the extracted site to your web server's root directory
@@ -33,7 +33,8 @@ Setting up a new instance of ToastyCMS2 in 8 easy steps:
     
     10) Start toasting a new website and leave comments, report bugs, and open issues here.
     
-    
+more information at http://toastycms.com/
+
 Known issues:
     - There are issues running ToastyCMS under a WAMP server. It was develped in a Linux environment and I made some 
     assumptions about where executables may exist. Although I am not formally supporting running in a WAMP environment,
