@@ -87,9 +87,60 @@ class ContentView extends View {
 			
 			return $output;
 
-		} 
+		}
 
 
+
+	}
+
+	public function getContentChildren($arg1, $arg2 = array()) {
+
+		$content = $this->c->Content;
+		
+		$output = array();
+
+		if (is_numeric($arg1)) {
+
+			$content_id = $arg1;
+
+			$options = array(
+				'conditions' => array(
+					'Content.parent_content_id' => $arg1 
+				)
+			);
+
+			$output = $content->find('all', $options);
+
+
+		}
+
+		if (is_numeric($arg2)) {
+
+			$content_id = $arg1;
+			$limit = $arg2;
+
+			$options = array(
+				'conditions' => array(
+					'Content.parent_content_id' => $content_id 
+				),
+				'limit' => $limit
+			);
+
+			$output = $content->find('all', $options);
+
+		}
+
+		if (is_array($arg2)) {
+
+			$scope = $arg1;
+
+			$options = $arg2;
+
+			$output = $content->find($scope, $options);
+			
+
+		}
+		return $output;
 
 	}
 
