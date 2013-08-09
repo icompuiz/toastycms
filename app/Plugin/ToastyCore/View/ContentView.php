@@ -106,7 +106,9 @@ class ContentView extends View {
 			$options = array(
 				'conditions' => array(
 					'Content.parent_content_id' => $arg1 
-				)
+				),
+				'order' => array('Content.sort')
+
 			);
 
 			$output = $content->find('all', $options);
@@ -123,7 +125,8 @@ class ContentView extends View {
 				'conditions' => array(
 					'Content.parent_content_id' => $content_id 
 				),
-				'limit' => $limit
+				'limit' => $limit,
+				'order' => array('Content.sort')
 			);
 
 			$output = $content->find('all', $options);
