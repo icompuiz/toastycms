@@ -31,10 +31,10 @@ class PropertyBase extends ToastyCoreAppModel {
 
                         $file = new File($name);
                         $file->delete();
-
-                        $name = preg_replace("/^(img|js|css|$base)\//", "", $name);
-                        $name = preg_replace("/^($base)\//", "", $name);
-                        $name = preg_replace("/\.\w+$/", "", $name); 
+                        
+                        $name = preg_replace("~^(img|js|css|$base)\/~", "", $name);
+                        $name = preg_replace("~^($base)\/~", "", $name);
+                        $name = preg_replace("~\.\w+$~", "", $name); 
                     }
 
                 }
