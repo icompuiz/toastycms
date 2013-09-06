@@ -243,10 +243,10 @@ class ContentsController extends ToastyCoreAppController {
 
     
 
-    private function saveData($data) {
+    public function saveData($data) {
 
 
-        $properties = isset($data['Content']['ContentTypeProperties']) ? $data['Content']['ContentTypeProperties'] : null;
+        $properties = isset($data['Content']['ContentTypeProperties']) ? $data['Content']['ContentTypeProperties'] : array();
 
         if (!empty($properties)) {
             unset($data['Content']['ContentTypeProperties']);
@@ -257,19 +257,34 @@ class ContentsController extends ToastyCoreAppController {
             }
         }
 
+
         $content = $this->Content->save($data);
-        if (!empty($content)) {
 
-            foreach ($properties as $property) {
+        if (isset($content['Content']['id'])) {
 
-                $property['content_id'] = $content['Content']['id'];
-                $current['ContentTypeProperties'] = $property;
+            $id = $content['Content']['id'];
+            
+            
+            if (!empty($content)) {
 
-                $this->Content->ContentTypeProperties->save($current);
+                foreach ($properties as $property) {
+
+                    
+                    $property['content_id'] = $id;
+
+                    if (!isset($property['id'])) {
+
+                        $this->Content->ContentTypeProperties->create();
+                        
+                    }
+
+
+                    $current['ContentTypeProperties'] = $property;
+
+                    $this->Content->ContentTypeProperties->save($current);
+                }
+                return $content;
             }
-
-
-            return $content;
         }
         return false;
     }
