@@ -72,6 +72,8 @@ if (!file_exists(CORE_SECURITY_FILE)) {
 
 }
 
+
+
 /**
  * The absolute path to the "cake" directory, WITHOUT a trailing DS.
  *
@@ -125,6 +127,11 @@ if (!empty($failed)) {
 }
 
 require 'constants.php';
+
+if (!is_dir(TMP)) {
+	mkdir(TMP);
+}
+
 
 App::uses('Dispatcher', 'Routing');
 

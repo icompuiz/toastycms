@@ -116,8 +116,13 @@ if (Configure::read('debug') < 1) {
 	throw new NotFoundException(__d('cake_dev', 'Debug setting does not allow access to this url.'));
 }
 
+if (!is_dir(TMP)) {
+	mkdir(TMP);
+}
+
 require_once CAKE . 'TestSuite' . DS . 'CakeTestSuiteDispatcher.php';
 require 'constants.php';
 
 
 CakeTestSuiteDispatcher::run();
+
