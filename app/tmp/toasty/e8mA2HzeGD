@@ -1,6 +1,0 @@
-<?php $this->extend('template_1');?>
-<?php
-
-	echo "Hello world";
-
-?>
