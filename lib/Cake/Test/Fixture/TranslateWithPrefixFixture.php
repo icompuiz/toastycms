@@ -4,8 +4,6 @@
  *
  * Long description for file
  *
- * PHP 5
- *
  * CakePHP(tm) Tests <http://book.cakephp.org/2.0/en/development/testing.html>
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
@@ -20,21 +18,14 @@
  * @version       $Revision$
  * @modifiedby    $LastChangedBy$
  * @lastmodified  $Date$
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 /**
- * Short description for class.
+ * Class TranslateWithPrefixFixture
  *
  * @package       Cake.Test.Fixture
  */
 class TranslateWithPrefixFixture extends CakeTestFixture {
-
-/**
- * name property
- *
- * @var string 'Translate'
- */
-	public $name = 'TranslateWithPrefix';
 
 /**
  * table property

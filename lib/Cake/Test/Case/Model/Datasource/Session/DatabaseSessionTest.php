@@ -2,8 +2,6 @@
 /**
  * DatabaseSessionTest file
  *
- * PHP 5
- *
  * CakePHP(tm) Tests <http://book.cakephp.org/2.0/en/development/testing.html>
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
@@ -15,7 +13,7 @@
  * @link          http://cakephp.org CakePHP(tm) Project
  * @package       Cake.Test.Case.Model.Datasource.Session
  * @since         CakePHP(tm) v 2.0
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
 App::uses('Model', 'Model');
@@ -23,9 +21,12 @@ App::uses('CakeSession', 'Model/Datasource');
 App::uses('DatabaseSession', 'Model/Datasource/Session');
 class_exists('CakeSession');
 
+/**
+ * Class SessionTestModel
+ *
+ * @package       Cake.Test.Case.Model.Datasource.Session
+ */
 class SessionTestModel extends Model {
-
-	public $name = 'SessionTestModel';
 
 	public $useTable = 'sessions';
 

@@ -2,6 +2,7 @@
 app/tmp/cache/models/myapp_*
 app/tmp/cache/persistent/myapp_*
 app/tmp/logs/error.log
+app/tmp/toasty
 app/sql
 app/webroot/img/contenttypeproperty
 app/webroot/contenttypeproperty

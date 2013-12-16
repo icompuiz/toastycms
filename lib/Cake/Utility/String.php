@@ -2,8 +2,6 @@
 /**
  * String handling methods.
  *
- * PHP 5
- *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
@@ -15,7 +13,7 @@
  * @link          http://cakephp.org CakePHP(tm) Project
  * @package       Cake.Utility
  * @since         CakePHP(tm) v 1.2.0.5551
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
 /**
@@ -191,9 +189,9 @@ class String {
  * - clean: A boolean or array with instructions for String::cleanInsert
  *
  * @param string $str A string containing variable placeholders
- * @param string $data A key => val array where each key stands for a placeholder variable name
+ * @param array $data A key => val array where each key stands for a placeholder variable name
  *     to be replaced with val
- * @param string $options An array of options, see description above
+ * @param array $options An array of options, see description above
  * @return string
  */
 	public static function insert($str, $data, $options = array()) {
@@ -256,7 +254,7 @@ class String {
  * by String::insert().
  *
  * @param string $str
- * @param string $options
+ * @param array $options
  * @return string
  * @see String::insert()
  */
@@ -319,12 +317,12 @@ class String {
  *
  * ### Options
  *
- * - `width` The width to wrap to. Defaults to 72
+ * - `width` The width to wrap to. Defaults to 72.
  * - `wordWrap` Only wrap on words breaks (spaces) Defaults to true.
  * - `indent` String to indent with. Defaults to null.
  * - `indentAt` 0 based index to start indenting at. Defaults to 0.
  *
- * @param string $text Text the text to format.
+ * @param string $text The text to format.
  * @param array|integer $options Array of options to use, or an integer to wrap the text to.
  * @return string Formatted text.
  */
@@ -334,7 +332,7 @@ class String {
 		}
 		$options += array('width' => 72, 'wordWrap' => true, 'indent' => null, 'indentAt' => 0);
 		if ($options['wordWrap']) {
-			$wrapped = wordwrap($text, $options['width'], "\n");
+			$wrapped = self::wordWrap($text, $options['width'], "\n");
 		} else {
 			$wrapped = trim(chunk_split($text, $options['width'] - 1, "\n"));
 		}
@@ -349,6 +347,55 @@ class String {
 	}
 
 /**
+ * Unicode aware version of wordwrap.
+ *
+ * @param string $text The text to format.
+ * @param integer $width The width to wrap to. Defaults to 72.
+ * @param string $break The line is broken using the optional break parameter. Defaults to '\n'.
+ * @param boolean $cut If the cut is set to true, the string is always wrapped at the specified width.
+ * @return string Formatted text.
+ */
+	public static function wordWrap($text, $width = 72, $break = "\n", $cut = false) {
+		if ($cut) {
+			$parts = array();
+			while (mb_strlen($text) > 0) {
+				$part = mb_substr($text, 0, $width);
+				$parts[] = trim($part);
+				$text = trim(mb_substr($text, mb_strlen($part)));
+			}
+			return implode($break, $parts);
+		}
+
+		$parts = array();
+		while (mb_strlen($text) > 0) {
+			if ($width >= mb_strlen($text)) {
+				$parts[] = trim($text);
+				break;
+			}
+
+			$part = mb_substr($text, 0, $width);
+			$nextChar = mb_substr($text, $width, 1);
+			if ($nextChar !== ' ') {
+				$breakAt = mb_strrpos($part, ' ');
+				if ($breakAt === false) {
+					$breakAt = mb_strpos($text, ' ', $width);
+				}
+				if ($breakAt === false) {
+					$parts[] = trim($text);
+					break;
+				}
+				$part = mb_substr($text, 0, $breakAt);
+			}
+
+			$part = trim($part);
+			$parts[] = $part;
+			$text = trim(mb_substr($text, mb_strlen($part)));
+		}
+
+		return implode($break, $parts);
+	}
+
+/**
  * Highlights a given phrase in a text. You can specify any expression in highlighter that
  * may include the \1 expression to include the $phrase found.
  *
@@ -356,7 +403,7 @@ class String {
  *
  * - `format` The piece of html with that the phrase will be highlighted
  * - `html` If true, will ignore any HTML tags, ensuring that only the correct text is highlighted
- * - `regex` a custom regex rule that is ued to match words, default is '|$tag|iu'
+ * - `regex` a custom regex rule that is used to match words, default is '|$tag|iu'
  *
  * @param string $text Text to search the phrase in
  * @param string $phrase The phrase that will be searched
@@ -524,7 +571,7 @@ class String {
 						}
 					}
 
-					$truncate .= mb_substr($tag[3], 0 , $left + $entitiesLength);
+					$truncate .= mb_substr($tag[3], 0, $left + $entitiesLength);
 					break;
 				} else {
 					$truncate .= $tag[3];

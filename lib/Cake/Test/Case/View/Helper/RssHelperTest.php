@@ -2,8 +2,6 @@
 /**
  * RssHelperTest file
  *
- * PHP 5
- *
  * CakePHP(tm) Tests <http://book.cakephp.org/2.0/en/development/testing.html>
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
@@ -15,8 +13,9 @@
  * @link          http://book.cakephp.org/2.0/en/development/testing.html CakePHP(tm) Tests
  * @package       Cake.Test.Case.View.Helper
  * @since         CakePHP(tm) v 1.2.0.4206
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
+
 App::uses('View', 'View');
 App::uses('RssHelper', 'View/Helper');
 App::uses('TimeHelper', 'View/Helper');
@@ -609,7 +608,7 @@ class RssHelperTest extends CakeTestCase {
 
 		$this->assertTrue($File->write('123'), 'Could not write to ' . $tmpFile);
 
-		if (50300 <= PHP_VERSION_ID) {
+		if (PHP_VERSION_ID >= 50300) {
 			clearstatcache(true, $tmpFile);
 		} else {
 			clearstatcache();
@@ -744,36 +743,36 @@ class RssHelperTest extends CakeTestCase {
 
 	public function testElementNamespaceWithPrefix() {
 		$item = array(
-				'title' => 'Title',
-				'dc:creator' => 'Alex',
-				'xy:description' => 'descriptive words'
-			);
+			'title' => 'Title',
+			'dc:creator' => 'Alex',
+			'dc:description' => 'descriptive words'
+		);
 		$attributes = array(
-				'namespace' => array(
-						'prefix' => 'dc',
-						'url' => 'http://link.com'
-				)
+			'namespace' => array(
+				'prefix' => 'dc',
+				'url' => 'http://link.com'
+			)
 		);
 		$result = $this->Rss->item($attributes, $item);
 		$expected = array(
 			'item' => array(
-					'xmlns:dc' => 'http://link.com'
+				'xmlns:dc' => 'http://link.com'
 			),
 			'title' => array(
-					'xmlns:dc' => 'http://link.com'
+				'xmlns:dc' => 'http://link.com'
 			),
 			'Title',
 			'/title',
 			'dc:creator' => array(
-					'xmlns:dc' => 'http://link.com'
+				'xmlns:dc' => 'http://link.com'
 			),
 			'Alex',
 			'/dc:creator',
-			'description' => array(
-					'xmlns:dc' => 'http://link.com'
+			'dc:description' => array(
+				'xmlns:dc' => 'http://link.com'
 			),
 			'descriptive words',
-			'/description',
+			'/dc:description',
 			'/item'
 		);
 		$this->assertTags($result, $expected, true);

@@ -1,10 +1,10 @@
 <?php
 /**
+ *
+ *
  * Tests cross database HABTM. Requires $test and $test2 to both be set in DATABASE_CONFIG
  * NOTE: When testing on MySQL, you must set 'persistent' => false on *both* database connections,
  * or one connection will step on the other.
- *
- * PHP 5
  *
  * CakePHP(tm) Tests <http://book.cakephp.org/2.0/en/development/testing.html>
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
@@ -17,10 +17,16 @@
  * @link          http://book.cakephp.org/2.0/en/development/testing.html CakePHP(tm) Tests
  * @package       Cake.Test.Case.Model
  * @since         CakePHP(tm) v 2.1
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
+
 require_once dirname(__FILE__) . DS . 'ModelTestBase.php';
 
+/**
+ * Class ModelCrossSchemaHabtmTest
+ *
+ * @package       Cake.Test.Case.Model
+ */
 class ModelCrossSchemaHabtmTest extends BaseModelTest {
 
 /**
@@ -141,7 +147,7 @@ class ModelCrossSchemaHabtmTest extends BaseModelTest {
 		));
 
 		$results = $Player->saveAll($player, array('validate' => 'first'));
-		$this->assertNotEqual(false, $results);
+		$this->assertNotSame(false, $results);
 		$count = $Player->find('count');
 		$this->assertEquals(5, $count);
 

@@ -2,8 +2,6 @@
 /**
  * MS SQL Server layer for DBO
  *
- * PHP 5
- *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
@@ -15,17 +13,17 @@
  * @link          http://cakephp.org CakePHP(tm) Project
  * @package       Cake.Model.Datasource.Database
  * @since         CakePHP(tm) v 0.10.5.1790
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
 App::uses('DboSource', 'Model/Datasource');
 
 /**
- * Dbo layer for Mircosoft's offical SQLServer driver
+ * Dbo layer for Microsoft's official SQLServer driver
  *
  * A Dbo layer for MS SQL Server 2005 and higher. Requires the
  * `pdo_sqlsrv` extension to be enabled.
- * 
+ *
  * @link http://www.php.net/manual/en/ref.pdo-sqlsrv.php
  *
  * @package       Cake.Model.Datasource.Database
@@ -117,14 +115,17 @@ class Sqlserver extends DboSource {
 	public function connect() {
 		$config = $this->config;
 		$this->connected = false;
+
+		$flags = array(
+			PDO::ATTR_PERSISTENT => $config['persistent'],
+			PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+		);
+
+		if (!empty($config['encoding'])) {
+			$flags[PDO::SQLSRV_ATTR_ENCODING] = $config['encoding'];
+		}
+
 		try {
-			$flags = array(
-				PDO::ATTR_PERSISTENT => $config['persistent'],
-				PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-			);
-			if (!empty($config['encoding'])) {
-				$flags[PDO::SQLSRV_ATTR_ENCODING] = $config['encoding'];
-			}
 			$this->_connection = new PDO(
 				"sqlsrv:server={$config['host']};Database={$config['database']}",
 				$config['login'],
@@ -132,6 +133,11 @@ class Sqlserver extends DboSource {
 				$flags
 			);
 			$this->connected = true;
+			if (!empty($config['settings'])) {
+				foreach ($config['settings'] as $key => $value) {
+					$this->_execute("SET $key $value");
+				}
+			}
 		} catch (PDOException $e) {
 			throw new MissingConnectionException(array(
 				'class' => get_class($this),
@@ -167,17 +173,16 @@ class Sqlserver extends DboSource {
 		if (!$result) {
 			$result->closeCursor();
 			return array();
-		} else {
-			$tables = array();
-
-			while ($line = $result->fetch(PDO::FETCH_NUM)) {
-				$tables[] = $line[0];
-			}
-
-			$result->closeCursor();
-			parent::listSources($tables);
-			return $tables;
 		}
+		$tables = array();
+
+		while ($line = $result->fetch(PDO::FETCH_NUM)) {
+			$tables[] = $line[0];
+		}
+
+		$result->closeCursor();
+		parent::listSources($tables);
+		return $tables;
 	}
 
 /**
@@ -216,14 +221,20 @@ class Sqlserver extends DboSource {
 			$fields[$field] = array(
 				'type' => $this->column($column),
 				'null' => ($column->Null === 'YES' ? true : false),
-				'default' => preg_replace("/^[(]{1,2}'?([^')]*)?'?[)]{1,2}$/", "$1", $column->Default),
+				'default' => $column->Default,
 				'length' => $this->length($column),
 				'key' => ($column->Key == '1') ? 'primary' : false
 			);
 
 			if ($fields[$field]['default'] === 'null') {
 				$fields[$field]['default'] = null;
-			} else {
+			}
+			if ($fields[$field]['default'] !== null) {
+				$fields[$field]['default'] = preg_replace(
+					"/^[(]{1,2}'?([^')]*)?'?[)]{1,2}$/",
+					"$1",
+					$fields[$field]['default']
+				);
 				$this->value($fields[$field]['default'], $fields[$field]['type']);
 			}
 
@@ -265,7 +276,7 @@ class Sqlserver extends DboSource {
 			for ($i = 0; $i < $count; $i++) {
 				$prepend = '';
 
-				if (strpos($fields[$i], 'DISTINCT') !== false) {
+				if (strpos($fields[$i], 'DISTINCT') !== false && strpos($fields[$i], 'COUNT') === false) {
 					$prepend = 'DISTINCT ';
 					$fields[$i] = trim(str_replace('DISTINCT', '', $fields[$i]));
 				}
@@ -307,9 +318,8 @@ class Sqlserver extends DboSource {
 				$result[] = $prepend . $fields[$i];
 			}
 			return $result;
-		} else {
-			return $fields;
 		}
+		return $fields;
 	}
 
 /**
@@ -378,9 +388,9 @@ class Sqlserver extends DboSource {
 			if (!strpos(strtolower($limit), 'top') || strpos(strtolower($limit), 'top') === 0) {
 				$rt = ' TOP';
 			}
-			$rt .= ' ' . $limit;
+			$rt .= sprintf(' %u', $limit);
 			if (is_int($offset) && $offset > 0) {
-				$rt = ' OFFSET ' . intval($offset) . ' ROWS FETCH FIRST ' . intval($limit) . ' ROWS ONLY';
+				$rt = sprintf(' OFFSET %u ROWS FETCH FIRST %u ROWS ONLY', $offset, $limit);
 			}
 			return $rt;
 		}
@@ -518,20 +528,19 @@ class Sqlserver extends DboSource {
 					$offset = intval($limitOffset[2] * $page);
 
 					$rowCounter = self::ROW_COUNTER;
-					return "
-						SELECT {$limit} * FROM (
+					$sql = "SELECT {$limit} * FROM (
 							SELECT {$fields}, ROW_NUMBER() OVER ({$order}) AS {$rowCounter}
 							FROM {$table} {$alias} {$joins} {$conditions} {$group}
 						) AS _cake_paging_
 						WHERE _cake_paging_.{$rowCounter} > {$offset}
 						ORDER BY _cake_paging_.{$rowCounter}
 					";
-				} elseif (strpos($limit, 'FETCH') !== false) {
-					return "SELECT {$fields} FROM {$table} {$alias} {$joins} {$conditions} {$group} {$order} {$limit}";
-				} else {
-					return "SELECT {$limit} {$fields} FROM {$table} {$alias} {$joins} {$conditions} {$group} {$order}";
+					return trim($sql);
 				}
-			break;
+				if (strpos($limit, 'FETCH') !== false) {
+					return trim("SELECT {$fields} FROM {$table} {$alias} {$joins} {$conditions} {$group} {$order} {$limit}");
+				}
+				return trim("SELECT {$limit} {$fields} FROM {$table} {$alias} {$joins} {$conditions} {$group} {$order}");
 			case "schema":
 				extract($data);
 
@@ -547,7 +556,7 @@ class Sqlserver extends DboSource {
 						${$var} = "\t" . implode(",\n\t", array_filter(${$var}));
 					}
 				}
-				return "CREATE TABLE {$table} (\n{$columns});\n{$indexes}";
+				return trim("CREATE TABLE {$table} (\n{$columns});\n{$indexes}");
 			default:
 				return parent::renderStatement($type, $data);
 		}
@@ -561,9 +570,10 @@ class Sqlserver extends DboSource {
  * @return string Quoted and escaped data
  */
 	public function value($data, $column = null) {
-		if (is_array($data) || is_object($data)) {
+		if ($data === null || is_array($data) || is_object($data)) {
 			return parent::value($data, $column);
-		} elseif (in_array($data, array('{$__cakeID__$}', '{$__cakeForeignKey__$}'), true)) {
+		}
+		if (in_array($data, array('{$__cakeID__$}', '{$__cakeForeignKey__$}'), true)) {
 			return $data;
 		}
 
@@ -587,7 +597,7 @@ class Sqlserver extends DboSource {
  * @param Model $model
  * @param array $queryData
  * @param integer $recursive
- * @return array Array of resultset rows, or false if no rows matched
+ * @return array|false Array of resultset rows, or false if no rows matched
  */
 	public function read(Model $model, $queryData = array(), $recursive = null) {
 		$results = parent::read($model, $queryData, $recursive);
@@ -610,7 +620,7 @@ class Sqlserver extends DboSource {
 					continue;
 				}
 				$resultRow[$table][$column] = $row[$col];
-				if ($type === 'boolean' && !is_null($row[$col])) {
+				if ($type === 'boolean' && $row[$col] !== null) {
 					$resultRow[$table][$column] = $this->boolean($resultRow[$table][$column]);
 				}
 			}

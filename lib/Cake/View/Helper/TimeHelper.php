@@ -2,8 +2,6 @@
 /**
  * Time Helper class file.
  *
- * PHP 5
- *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
@@ -15,7 +13,7 @@
  * @link          http://cakephp.org CakePHP(tm) Project
  * @package       Cake.View.Helper
  * @since         CakePHP(tm) v 0.10.0.1076
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
 App::uses('CakeTime', 'Utility');
@@ -49,7 +47,7 @@ class TimeHelper extends AppHelper {
  *            The class needs to be placed in the `Utility` directory.
  *
  * @param View $View the view object the helper is attached to.
- * @param array $settings Settings array Settings array
+ * @param array $settings Settings array
  * @throws CakeException When the engine class could not be found.
  */
 	public function __construct(View $View, $settings = array()) {
@@ -75,10 +73,9 @@ class TimeHelper extends AppHelper {
 		switch ($name) {
 			case 'niceFormat':
 				$this->_engine->{$name} = $value;
-			break;
+				break;
 			default:
 				$this->{$name} = $value;
-			break;
 		}
 	}
 
@@ -118,6 +115,7 @@ class TimeHelper extends AppHelper {
 
 /**
  * Call methods from CakeTime utility class
+ * @return mixed Whatever is returned by called method, or false on failure
  */
 	public function __call($method, $params) {
 		return call_user_func_array(array($this->_engine, $method), $params);
@@ -351,7 +349,7 @@ class TimeHelper extends AppHelper {
  * - `element` - The element to wrap the formatted time in.
  *   Has a few additional options:
  *   - `tag` - The tag to use, defaults to 'span'.
- *   - `class` - The classname to use, defaults to `time-ago-in-words`.
+ *   - `class` - The class name to use, defaults to `time-ago-in-words`.
  *   - `title` - Defaults to the $dateTime input.
  *
  * @param integer|string|DateTime $dateTime UNIX timestamp, strtotime() valid string or DateTime object
@@ -362,7 +360,7 @@ class TimeHelper extends AppHelper {
 	public function timeAgoInWords($dateTime, $options = array()) {
 		$element = null;
 
-		if (is_array($options) && !empty($options['element'])) {
+		if (!empty($options['element'])) {
 			$element = array(
 				'tag' => 'span',
 				'class' => 'time-ago-in-words',

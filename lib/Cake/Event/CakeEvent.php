@@ -1,7 +1,6 @@
 <?php
 /**
  *
- * PHP 5
  *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
@@ -14,11 +13,11 @@
  * @link		  http://cakephp.org CakePHP(tm) Project
  * @package		  Cake.Observer
  * @since		  CakePHP(tm) v 2.1
- * @license		  MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
 /**
- * Represents the transport class of events across the system, it receives a name, and subject and an optional
+ * Represents the transport class of events across the system. It receives a name, subject and an optional
  * payload. The name can be any string that uniquely identifies the event across the application, while the subject
  * represents the object that the event applies to.
  *

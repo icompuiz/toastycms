@@ -3,9 +3,7 @@
  * Dispatcher takes the URL information, parses it for parameters and
  * tells the involved controllers what to do.
  *
- * This is the heart of Cake's operation.
- *
- * PHP 5
+ * This is the heart of CakePHP's operation.
  *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
@@ -18,7 +16,7 @@
  * @link          http://cakephp.org CakePHP(tm) Project
  * @package       Cake.Routing
  * @since         CakePHP(tm) v 0.2.9
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
 App::uses('Router', 'Routing');
@@ -61,7 +59,7 @@ class Dispatcher implements CakeEventListener {
 
 /**
  * Returns the CakeEventManager instance or creates one if none was
- * creted. Attaches the default listeners and filters
+ * created. Attaches the default listeners and filters
  *
  * @return CakeEventManager
  */
@@ -75,7 +73,7 @@ class Dispatcher implements CakeEventListener {
 	}
 
 /**
- * Returns the list of events this object listents to.
+ * Returns the list of events this object listens to.
  *
  * @return array
  */
@@ -177,7 +175,7 @@ class Dispatcher implements CakeEventListener {
  * @param Controller $controller Controller to invoke
  * @param CakeRequest $request The request object to invoke the controller for.
  * @param CakeResponse $response The response object to receive the output
- * @return CakeResponse te resulting response object
+ * @return CakeResponse the resulting response object
  */
 	protected function _invoke(Controller $controller, CakeRequest $request, CakeResponse $response) {
 		$controller->constructClasses();
@@ -192,9 +190,7 @@ class Dispatcher implements CakeEventListener {
 
 		if ($render && $controller->autoRender) {
 			$response = $controller->render();
-		} elseif (!($result instanceof CakeResponse) &&
-			$response->body() === null
-		) {
+		} elseif (!($result instanceof CakeResponse) && $response->body() === null) {
 			$response->body($result);
 		}
 		$controller->shutdownProcess();
@@ -240,10 +236,10 @@ class Dispatcher implements CakeEventListener {
 	}
 
 /**
- * Load controller and return controller classname
+ * Load controller and return controller class name
  *
  * @param CakeRequest $request
- * @return string|bool Name of controller class name
+ * @return string|boolean Name of controller class name
  */
 	protected function _loadController($request) {
 		$pluginName = $pluginPath = $controller = null;

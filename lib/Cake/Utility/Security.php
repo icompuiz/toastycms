@@ -2,8 +2,6 @@
 /**
  * Core Security
  *
- * PHP 5
- *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
@@ -15,7 +13,7 @@
  * @link          http://cakephp.org CakePHP(tm) Project
  * @package       Cake.Utility
  * @since         CakePHP(tm) v .0.10.0.1233
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
 App::uses('String', 'Utility');
@@ -99,10 +97,11 @@ class Security {
  *
  * @param string $string String to hash
  * @param string $type Method to use (sha1/sha256/md5/blowfish)
- * @param mixed $salt If true, automatically appends the application's salt
+ * @param mixed $salt If true, automatically prepends the application's salt
  *     value to $string (Security.salt). If you are using blowfish the salt
  *     must be false or a previously generated salt.
  * @return string Hash
+ * @link http://book.cakephp.org/2.0/en/core-utility-libraries/security.html#Security::hash
  */
 	public static function hash($string, $type = null, $salt = false) {
 		if (empty($type)) {
@@ -168,15 +167,23 @@ class Security {
 	}
 
 /**
- * Encrypts/Decrypts a text using the given key.
+ * Runs $text through a XOR cipher.
+ *
+ * *Note* This is not a cryptographically strong method and should not be used
+ * for sensitive data. Additionally this method does *not* work in environments
+ * where suhosin is enabled.
+ *
+ * Instead you should use Security::rijndael() when you need strong
+ * encryption.
  *
  * @param string $text Encrypted string to decrypt, normal string to encrypt
  * @param string $key Key to use
  * @return string Encrypted/Decrypted string
+ * @deprecated Will be removed in 3.0.
  */
 	public static function cipher($text, $key) {
 		if (empty($key)) {
-			trigger_error(__d('cake_dev', 'You cannot use an empty key for Security::cipher()'), E_USER_WARNING);
+			trigger_error(__d('cake_dev', 'You cannot use an empty key for %s', 'Security::cipher()'), E_USER_WARNING);
 			return '';
 		}
 
@@ -205,11 +212,11 @@ class Security {
  * @param string $text Encrypted string to decrypt, normal string to encrypt
  * @param string $key Key to use as the encryption key for encrypted data.
  * @param string $operation Operation to perform, encrypt or decrypt
- * @return string Encrypted/Descrypted string
+ * @return string Encrypted/Decrypted string
  */
 	public static function rijndael($text, $key, $operation) {
 		if (empty($key)) {
-			trigger_error(__d('cake_dev', 'You cannot use an empty key for Security::rijndael()'), E_USER_WARNING);
+			trigger_error(__d('cake_dev', 'You cannot use an empty key for %s', 'Security::rijndael()'), E_USER_WARNING);
 			return '';
 		}
 		if (empty($operation) || !in_array($operation, array('encrypt', 'decrypt'))) {

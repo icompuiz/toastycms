@@ -7,7 +7,7 @@ App::uses('File', 'Utility');
 class ToastyCoreAppModel extends AppModel {
 
     public $name = 'ToastyCoreAppModel';
-    public $base_path;
+    public $base_path;    
 
     protected function checkId($id) {
 

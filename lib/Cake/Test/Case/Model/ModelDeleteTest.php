@@ -2,8 +2,6 @@
 /**
  * ModelDeleteTest file
  *
- * PHP 5
- *
  * CakePHP(tm) Tests <http://book.cakephp.org/2.0/en/development/testing.html>
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
@@ -15,8 +13,9 @@
  * @link          http://book.cakephp.org/2.0/en/development/testing.html CakePHP(tm) Tests
  * @package       Cake.Test.Case.Model
  * @since         CakePHP(tm) v 1.2.0.4206
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
+
 require_once dirname(__FILE__) . DS . 'ModelTestBase.php';
 
 /**
@@ -150,7 +149,7 @@ class ModelDeleteTest extends BaseModelTest {
  * @return void
  */
 	public function testDeleteDependentWithConditions() {
-		$this->loadFixtures('Cd','Book','OverallFavorite');
+		$this->loadFixtures('Cd', 'Book', 'OverallFavorite');
 
 		$Cd = new Cd();
 		$Book = new Book();
@@ -569,6 +568,7 @@ class ModelDeleteTest extends BaseModelTest {
 			'Tag' => array('with' => 'TestPlugin.ArticlesTag')
 		)), false);
 
+		$Article->ArticlesTag->order = null;
 		$this->assertTrue($Article->delete(1));
 	}
 
@@ -659,7 +659,7 @@ class ModelDeleteTest extends BaseModelTest {
 		$this->assertEquals(4, $result);
 
 		$result = $Article->delete(1, true);
-		$this->assertSame($result, true);
+		$this->assertTrue($result);
 
 		$result = $Article->Comment->find('count', array(
 			'conditions' => array('Comment.article_id' => 1)

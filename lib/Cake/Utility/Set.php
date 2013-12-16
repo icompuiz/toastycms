@@ -2,8 +2,6 @@
 /**
  * Library of array functions for Cake.
  *
- * PHP 5
- *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
@@ -15,7 +13,7 @@
  * @link          http://cakephp.org CakePHP(tm) Project
  * @package       Cake.Utility
  * @since         CakePHP(tm) v 1.2.0
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
 App::uses('String', 'Utility');
@@ -457,7 +455,7 @@ class Set {
  * This function can be used to see if a single item or a given xpath match certain conditions.
  *
  * @param string|array $conditions An array of condition strings or an XPath expression
- * @param array $data  An array of data to execute the match on
+ * @param array $data An array of data to execute the match on
  * @param integer $i Optional: The 'nth'-number of the item being matched.
  * @param integer $length
  * @return boolean
@@ -591,7 +589,7 @@ class Set {
 					}
 				}
 				return $tmp;
-			} elseif (false !== strpos($key, '{') && false !== strpos($key, '}')) {
+			} elseif (strpos($key, '{') !== false && strpos($key, '}') !== false) {
 				$pattern = substr($key, 1, -1);
 
 				foreach ($data as $j => $val) {
@@ -935,7 +933,7 @@ class Set {
 		$stack = array();
 		foreach ($results as $k => $r) {
 			$id = $k;
-			if (!is_null($key)) {
+			if ($key !== null) {
 				$id = $key;
 			}
 			if (is_array($r) && !empty($r)) {

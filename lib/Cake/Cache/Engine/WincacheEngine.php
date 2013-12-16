@@ -4,8 +4,6 @@
  *
  * Supports wincache 1.1.0 and higher.
  *
- * PHP 5
- *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
@@ -17,7 +15,7 @@
  * @link          http://cakephp.org CakePHP(tm) Project
  * @package       Cake.Cache.Engine
  * @since         CakePHP(tm) v 1.2.0.4933
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
 /**
@@ -29,7 +27,7 @@ class WincacheEngine extends CacheEngine {
 
 /**
  * Contains the compiled group names
- * (prefixed witht the global configuration prefix)
+ * (prefixed with the global configuration prefix)
  *
  * @var array
  */

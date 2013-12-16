@@ -1,10 +1,8 @@
 <?php
 /**
- * Basic Cake functionality.
+ * Basic CakePHP functionality.
  *
  * Core functions for including other source files, loading models and so forth.
- *
- * PHP 5
  *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
@@ -17,7 +15,7 @@
  * @link          http://cakephp.org CakePHP(tm) Project
  * @package       Cake
  * @since         CakePHP(tm) v 0.2.9
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
 /**
@@ -68,6 +66,7 @@ if (!function_exists('debug')) {
  * @param boolean $var Variable to show debug information for.
  * @param boolean $showHtml If set to true, the method prints the debug data in a browser-friendly way.
  * @param boolean $showFrom If set to true, the method prints from where the function was called.
+ * @return void
  * @link http://book.cakephp.org/2.0/en/development/debugging.html#basic-debugging
  * @link http://book.cakephp.org/2.0/en/core-libraries/global-constants-and-functions.html#debug
  */
@@ -95,6 +94,7 @@ HTML;
 ########## DEBUG ##########
 %s
 ###########################
+
 TEXT;
 			$template = $html;
 			if (php_sapi_name() === 'cli' || $showHtml === false) {
@@ -123,22 +123,22 @@ TEXT;
 if (!function_exists('sortByKey')) {
 
 /**
- * Sorts given $array by key $sortby.
+ * Sorts given $array by key $sortBy.
  *
  * @param array $array Array to sort
- * @param string $sortby Sort by this key
- * @param string $order  Sort order asc/desc (ascending or descending).
+ * @param string $sortBy Sort by this key
+ * @param string $order Sort order asc/desc (ascending or descending).
  * @param integer $type Type of sorting to perform
  * @return mixed Sorted array
  * @link http://book.cakephp.org/2.0/en/core-libraries/global-constants-and-functions.html#sortByKey
  */
-	function sortByKey(&$array, $sortby, $order = 'asc', $type = SORT_NUMERIC) {
+	function sortByKey(&$array, $sortBy, $order = 'asc', $type = SORT_NUMERIC) {
 		if (!is_array($array)) {
 			return null;
 		}
 
 		foreach ($array as $key => $val) {
-			$sa[$key] = $val[$sortby];
+			$sa[$key] = $val[$sortBy];
 		}
 
 		if ($order === 'asc') {
@@ -203,7 +203,7 @@ if (!function_exists('h')) {
 if (!function_exists('pluginSplit')) {
 
 /**
- * Splits a dot syntax plugin name into its plugin and classname.
+ * Splits a dot syntax plugin name into its plugin and class name.
  * If $name does not have a dot, then index 0 will be null.
  *
  * Commonly used like `list($plugin, $name) = pluginSplit($name);`
@@ -211,7 +211,7 @@ if (!function_exists('pluginSplit')) {
  * @param string $name The name you want to plugin split.
  * @param boolean $dotAppend Set to true if you want the plugin to have a '.' appended to it.
  * @param string $plugin Optional default plugin to use if no plugin is found. Defaults to null.
- * @return array Array with 2 indexes. 0 => plugin name, 1 => classname
+ * @return array Array with 2 indexes. 0 => plugin name, 1 => class name
  * @link http://book.cakephp.org/2.0/en/core-libraries/global-constants-and-functions.html#pluginSplit
  */
 	function pluginSplit($name, $dotAppend = false, $plugin = null) {
@@ -230,18 +230,20 @@ if (!function_exists('pluginSplit')) {
 if (!function_exists('pr')) {
 
 /**
- * Print_r convenience function, which prints out <PRE> tags around
- * the output of given array. Similar to debug().
+ * print_r() convenience function
  *
- * @see	debug()
+ * In terminals this will act the same as using print_r() directly, when not run on cli
+ * print_r() will wrap <PRE> tags around the output of given array. Similar to debug().
+ *
+ * @see debug()
  * @param array $var Variable to print out
+ * @return void
  * @link http://book.cakephp.org/2.0/en/core-libraries/global-constants-and-functions.html#pr
  */
 	function pr($var) {
 		if (Configure::read('debug') > 0) {
-			echo '<pre>';
-			print_r($var);
-			echo '</pre>';
+			$template = php_sapi_name() !== 'cli' ? '<pre>%s</pre>' : "\n%s\n";
+			printf($template, print_r($var, true));
 		}
 	}
 
@@ -281,7 +283,7 @@ if (!function_exists('env')) {
  * IIS, or SCRIPT_NAME in CGI mode). Also exposes some additional custom
  * environment information.
  *
- * @param  string $key Environment variable name.
+ * @param string $key Environment variable name.
  * @return string Environment variable setting.
  * @link http://book.cakephp.org/2.0/en/core-libraries/global-constants-and-functions.html#env
  */
@@ -320,11 +322,6 @@ if (!function_exists('env')) {
 		}
 
 		switch ($key) {
-			case 'SCRIPT_FILENAME':
-				if (defined('SERVER_IIS') && SERVER_IIS === true) {
-					return str_replace('\\\\', '\\', env('PATH_TRANSLATED'));
-				}
-				break;
 			case 'DOCUMENT_ROOT':
 				$name = env('SCRIPT_NAME');
 				$filename = env('SCRIPT_FILENAME');
@@ -387,12 +384,12 @@ if (!function_exists('cache')) {
 /**
  * Reads/writes temporary data to cache files or session.
  *
- * @param  string $path	File path within /tmp to save the file.
- * @param  mixed  $data	The data to save to the temporary file.
- * @param  mixed  $expires A valid strtotime string when the data expires.
- * @param  string $target  The target of the cached data; either 'cache' or 'public'.
- * @return mixed  The contents of the temporary file.
- * @deprecated Please use Cache::write() instead
+ * @param string $path File path within /tmp to save the file.
+ * @param mixed $data The data to save to the temporary file.
+ * @param mixed $expires A valid strtotime string when the data expires.
+ * @param string $target The target of the cached data; either 'cache' or 'public'.
+ * @return mixed The contents of the temporary file.
+ * @deprecated Will be removed in 3.0. Please use Cache::write() instead.
  */
 	function cache($path, $data = null, $expires = '+1 day', $target = 'cache') {
 		if (Configure::read('Cache.disable')) {
@@ -407,13 +404,13 @@ if (!function_exists('cache')) {
 		switch (strtolower($target)) {
 			case 'cache':
 				$filename = CACHE . $path;
-			break;
+				break;
 			case 'public':
 				$filename = WWW_ROOT . $path;
-			break;
+				break;
 			case 'tmp':
 				$filename = TMP . $path;
-			break;
+				break;
 		}
 		$timediff = $expires - $now;
 		$filetime = false;
@@ -483,30 +480,30 @@ if (!function_exists('clearCache')) {
 					}
 				}
 				return true;
-			} else {
-				$cache = array(
-					CACHE . $type . DS . '*' . $params . $ext,
-					CACHE . $type . DS . '*' . $params . '_*' . $ext
-				);
-				$files = array();
-				while ($search = array_shift($cache)) {
-					$results = glob($search);
-					if ($results !== false) {
-						$files = array_merge($files, $results);
-					}
-				}
-				if (empty($files)) {
-					return false;
-				}
-				foreach ($files as $file) {
-					if (is_file($file) && strrpos($file, DS . 'empty') !== strlen($file) - 6) {
-						//@codingStandardsIgnoreStart
-						@unlink($file);
-						//@codingStandardsIgnoreEnd
-					}
-				}
-				return true;
 			}
+			$cache = array(
+				CACHE . $type . DS . '*' . $params . $ext,
+				CACHE . $type . DS . '*' . $params . '_*' . $ext
+			);
+			$files = array();
+			while ($search = array_shift($cache)) {
+				$results = glob($search);
+				if ($results !== false) {
+					$files = array_merge($files, $results);
+				}
+			}
+			if (empty($files)) {
+				return false;
+			}
+			foreach ($files as $file) {
+				if (is_file($file) && strrpos($file, DS . 'empty') !== strlen($file) - 6) {
+					//@codingStandardsIgnoreStart
+					@unlink($file);
+					//@codingStandardsIgnoreEnd
+				}
+			}
+			return true;
+
 		} elseif (is_array($params)) {
 			foreach ($params as $file) {
 				clearCache($file, $type, $ext);

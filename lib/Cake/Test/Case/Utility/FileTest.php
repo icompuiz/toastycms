@@ -2,8 +2,6 @@
 /**
  * FileTest file
  *
- * PHP 5
- *
  * CakePHP(tm) Tests <http://book.cakephp.org/2.0/en/development/testing.html>
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
@@ -15,8 +13,9 @@
  * @link          http://book.cakephp.org/2.0/en/development/testing.html CakePHP(tm) Tests
  * @package       Cake.Test.Case.Utility
  * @since         CakePHP(tm) v 1.2.0.4206
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
+
 App::uses('File', 'Utility');
 App::uses('Folder', 'Utility');
 
@@ -216,19 +215,19 @@ class FileTest extends CakeTestCase {
 		$this->assertTrue(is_resource($this->File->handle));
 
 		$result = $this->File->offset();
-		$expecting = 0;
-		$this->assertSame($result, $expecting);
+		$expected = 0;
+		$this->assertSame($expected, $result);
 
 		$data = file_get_contents(__FILE__);
 		$success = $this->File->offset(5);
-		$expecting = substr($data, 5, 3);
+		$expected = substr($data, 5, 3);
 		$result = $this->File->read(3);
 		$this->assertTrue($success);
-		$this->assertEquals($expecting, $result);
+		$this->assertEquals($expected, $result);
 
 		$result = $this->File->offset();
-		$expecting = 5 + 3;
-		$this->assertSame($result, $expecting);
+		$expected = 5 + 3;
+		$this->assertSame($expected, $result);
 	}
 
 /**
@@ -309,11 +308,11 @@ class FileTest extends CakeTestCase {
 		} else {
 			$expected = "some\nvery\ncool\nteststring here\n\n\nfor\n\n\n\n\nhere";
 		}
-		$this->assertSame(File::prepare($string), $expected);
+		$this->assertSame($expected, File::prepare($string));
 
 		$expected = "some\r\nvery\r\ncool\r\nteststring here\r\n\r\n\r\n";
 		$expected .= "for\r\n\r\n\r\n\r\n\r\nhere";
-		$this->assertSame(File::prepare($string, true), $expected);
+		$this->assertSame($expected, File::prepare($string, true));
 	}
 
 /**
@@ -395,7 +394,7 @@ class FileTest extends CakeTestCase {
 	public function testWrite() {
 		if (!$tmpFile = $this->_getTmpFile()) {
 			return false;
-		};
+		}
 		if (file_exists($tmpFile)) {
 			unlink($tmpFile);
 		}
@@ -425,7 +424,7 @@ class FileTest extends CakeTestCase {
 	public function testAppend() {
 		if (!$tmpFile = $this->_getTmpFile()) {
 			return false;
-		};
+		}
 		if (file_exists($tmpFile)) {
 			unlink($tmpFile);
 		}
@@ -433,16 +432,24 @@ class FileTest extends CakeTestCase {
 		$TmpFile = new File($tmpFile);
 		$this->assertFalse(file_exists($tmpFile));
 
-		$fragments = array('CakePHP\'s', ' test suite', ' was here ...', '');
+		$fragments = array('CakePHP\'s', ' test suite', ' was here ...');
 		$data = null;
+		$size = 0;
 		foreach ($fragments as $fragment) {
 			$r = $TmpFile->append($fragment);
 			$this->assertTrue($r);
 			$this->assertTrue(file_exists($tmpFile));
 			$data = $data . $fragment;
 			$this->assertEquals($data, file_get_contents($tmpFile));
+			$newSize = $TmpFile->size();
+			$this->assertTrue($newSize > $size);
+			$size = $newSize;
 			$TmpFile->close();
 		}
+
+		$TmpFile->append('');
+		$this->assertEquals($data, file_get_contents($tmpFile));
+		$TmpFile->close();
 	}
 
 /**
@@ -534,7 +541,7 @@ class FileTest extends CakeTestCase {
 /**
  * getTmpFile method
  *
- * @param bool $paintSkip
+ * @param boolean $paintSkip
  * @return void
  */
 	protected function _getTmpFile($paintSkip = true) {

@@ -4,8 +4,6 @@
  *
  * Log messages to text files.
  *
- * PHP 5
- *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
@@ -17,7 +15,7 @@
  * @link          http://cakephp.org CakePHP(tm) Project
  * @package       Cake.Log
  * @since         CakePHP(tm) v 0.2.9
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
 App::uses('LogEngineCollection', 'Log');
@@ -34,7 +32,7 @@ App::uses('LogEngineCollection', 'Log');
  * A sample configuration would look like:
  *
  * {{{
- * CakeLog::config('my_log', array('engine' => 'FileLog'));
+ * CakeLog::config('my_log', array('engine' => 'File'));
  * }}}
  *
  * See the documentation on CakeLog::config() for more detail.
@@ -56,7 +54,7 @@ App::uses('LogEngineCollection', 'Log');
  * }}}
  *
  * If you require custom logging levels, you can use CakeLog::levels() to
- * append additoinal logging levels.
+ * append additional logging levels.
  *
  * ### Logging scopes
  *
@@ -133,7 +131,7 @@ class CakeLog {
  *
  * {{{
  * CakeLog::config('second_file', array(
- *     'engine' => 'FileLog',
+ *     'engine' => 'File',
  *     'path' => '/var/logs/my_app/'
  * ));
  * }}}
@@ -169,6 +167,7 @@ class CakeLog {
  * {{{
  * CakeLog::config('payments', array(
  *     'engine' => 'File',
+ *     'types' => array('info', 'error', 'warning'),
  *     'scopes' => array('payment', 'order')
  * ));
  * }}}
@@ -191,7 +190,7 @@ class CakeLog {
 			throw new CakeLogException(__d('cake_dev', 'Invalid key name'));
 		}
 		if (empty($config['engine'])) {
-			throw new CakeLogException(__d('cake_dev', 'Missing logger classname'));
+			throw new CakeLogException(__d('cake_dev', 'Missing logger class name'));
 		}
 		if (empty(self::$_Collection)) {
 			self::_init();
@@ -255,8 +254,8 @@ class CakeLog {
  * }}}
  *
  * @param array $levels array
- * @param bool $append true to append, false to replace
- * @return array active log levels
+ * @param boolean $append true to append, false to replace
+ * @return array Active log levels
  */
 	public static function levels($levels = array(), $append = true) {
 		if (empty(self::$_Collection)) {
@@ -278,7 +277,7 @@ class CakeLog {
 /**
  * Reset log levels to the original value
  *
- * @return array default log levels
+ * @return array Default log levels
  */
 	public static function defaultLevels() {
 		self::$_levelMap = self::$_defaultLevels;
@@ -301,10 +300,10 @@ class CakeLog {
 	}
 
 /**
- * Checks wether $streamName is enabled
+ * Checks whether $streamName is enabled
  *
  * @param string $streamName to check
- * @return bool
+ * @return boolean
  * @throws CakeLogException
  */
 	public static function enabled($streamName) {
@@ -378,7 +377,7 @@ class CakeLog {
  */
 	protected static function _autoConfig() {
 		self::$_Collection->load('default', array(
-			'engine' => 'FileLog',
+			'engine' => 'File',
 			'path' => LOGS,
 		));
 	}
