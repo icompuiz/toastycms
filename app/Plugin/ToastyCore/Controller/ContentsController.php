@@ -359,6 +359,15 @@ class ContentsController extends ToastyCoreAppController {
             if (!$is_numeric) {
                 $content_path = $this->Content->getPathFromId($id);
             }
+
+             if(!$content['ContentType']['content_template_id']) {
+
+
+                $this->home();
+
+                return;
+
+            }
     
             
             $template = $this->Content->ContentType->getTemplate($content['ContentType']['id']);
