@@ -23,11 +23,18 @@ class ContentsController extends ToastyCoreAppController {
 
         if (empty($content)) {
 
-            $this->layout = 'blank';
+            $this->notfound();
+            return;
         
         } else {
             $this->view($content['Content']['id'], $content);
         }
+
+    }
+
+    public function notfound() {
+
+        $this->layout = 'notfound';
 
     }
 
@@ -335,7 +342,9 @@ class ContentsController extends ToastyCoreAppController {
             }
 
             if (!$this->Content->exists($id)) {
-                throw new NotFoundException(__('Invalid content'));
+
+                $this->redirect(array('plugin' => 'toasty_core', 'controller' => 'contents', 'action' => 'notfound'));
+                                // throw new NotFoundException(__('Invalid content'));
             }
 
             $content = $this->Content->findById($id);
@@ -351,7 +360,9 @@ class ContentsController extends ToastyCoreAppController {
 
         if (!$published) {
             
-            $this->redirect("/404");
+            $this->redirect(array('plugin' => 'toasty_core', 'controller' => 'contents', 'action' => 'notfound'));
+            
+
 
         } else {
         
@@ -519,7 +530,7 @@ class ContentsController extends ToastyCoreAppController {
     public function beforeFilter() {
         parent::beforeFilter();
 
-        $this->Auth->allow('home');
+        $this->Auth->allow('home', 'notfound');
     }
 
 }
