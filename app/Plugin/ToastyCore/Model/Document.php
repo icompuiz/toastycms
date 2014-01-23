@@ -12,10 +12,12 @@ class Document extends ToastyCoreAppModel {
 
     public $validate = array(
         'name' => array(
-            'notEmpty'
-        ),
-        'user_id' => array(
-            'notEmpty'
+            'rule' => array('notempty'),
+            //'message' => 'Your custom message here',
+            //'allowEmpty' => false,
+            'required' => true,
+            //'last' => false, // Stop validation after this rule
+            //'on' => 'create', // Limit validation to 'create' or 'update' operations
         ),
         'home_page' => array(
             'onlyOneHomepage' => array(
@@ -304,8 +306,15 @@ class Document extends ToastyCoreAppModel {
 
         $document_id = $this->checkId($document_id);
 
+
         $conditions = array('Document.id' => $document_id);
+
         $document = $this->find('first', array('conditions' => $conditions));
+
+        if (empty($document)) {
+            return false;
+        }
+
         $type = $document['Document']['type'];
         return $type === 'root';
 
@@ -464,88 +473,6 @@ class Document extends ToastyCoreAppModel {
         $this->updatePublished($document);
 
     }
-
-
-
-
-    // public function sortSiblings($document_id) {
-
-    //     $document_id = $this->checkId($document_id);
-
-    //     $document = $this->data;
-
-    //     $object = new Document();
-
-    //     $options = array(
-    //         'conditions' => array(
-    //             'Document.parent_document_id' => $document['Document']['parent_document_id'],
-    //             'NOT' => array(
-    //                 'Document.id' => $document_id
-    //             )
-    //         ),
-    //         'order' => array(
-    //             'Document.sort',
-    //         )
-    //     );
-
-    //     $siblings = $object->find('all', $options);
-
-    //     $numSiblings = count($siblings);
-
-    //     $sorted = array();
-    //     $unsorted = array();
-
-    //     $counter = 0;
-    //     // separate unsorted items from sorted items
-    //     foreach($siblings as $sibling) {
-
-    //         if (0 === $sibling['Document']['sort']) {
-    //             $unsorted[] = $sibling;
-    //         } else {
-    //             $sorted[] = $sibling;
-    //             $counter++;
-    //         }
-
-    //     }
-
-    //     // give the unsorted items a sort value
-    //     foreach($unsorted as $sibling) {
-    //         $sorted[] = $sibling;
-    //         $counter++;
-    //     }
-
-    //     $sort = $document['Document']['sort'];
-
-    //     if ($sort >= $numSiblings + 1) {
-    //         // if the sort value is larger than the number of siblings
-    //         array_push($sorted, $document); // put it at the end
-    //     } elseif ($sort <= 1) {
-    //         // if the sort value is less than or equal to 1
-    //         array_unshift($sorted, $document); // put it in the front
-    //     } else {
-    //         // if the sort value is anything in between, 
-    //         array_splice($sorted, $sort - 1, 0, array($document)); // put it there wrap document in an array so unshift is inconsequential.
-    //     }
-
-    //     // go through the fully sorted array and save the final sort values to the db
-    //     $counter = 1;
-    //     foreach ($sorted as $sibling) {
-
-    //         if ($document_id !== $sibling['Document']['id']) {
-    //             $sibling['Document']['sort'] = $counter;
-    //             $sibling['Document']['modified'] = false;
-    //             $object->save($sibling, array('callbacks' => false));
-    //         } else {
-    //         	$this->data['Document']['sort'] = $counter;
-    //         }
-
-    //         $counter++;
-
-    //     }
-
-    // }
-
-
 
 }
 

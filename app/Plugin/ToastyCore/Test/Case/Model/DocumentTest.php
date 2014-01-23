@@ -10,7 +10,7 @@ class DocumentTest extends CakeTestCase {
     public $fixtures = array(
         'plugin.ToastyCore.Document', 
         'plugin.ToastyCore.DocumentType', 
-        'plugin.ToastyCore.DocumentProperty',
+        'plugin.ToastyCore.DocumentProperty'
         
 	);
 

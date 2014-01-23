@@ -1,0 +1,5 @@
+<?php
+
+	pr($documentTemplate);
+
+?>

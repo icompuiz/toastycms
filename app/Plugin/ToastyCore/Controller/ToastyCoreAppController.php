@@ -1,5 +1,6 @@
 <?php
 
+App::uses('AppController', 'Controller');
 App::uses('User', 'ToastyCore.Model');
 App::uses('Setting', 'ToastyCore.Model');
 
@@ -8,7 +9,7 @@ class ToastyCoreAppController extends AppController {
     public $components = array(
         'Session',
         'Auth' => array(
-            'loginRedirect' => array('controller' => 'dashboard', 'management' => true, 'plugin' => 'toasty_core'),
+            'loginRedirect' => array('controller' => 'main', 'management' => true, 'plugin' => 'toasty_core'),
             'logoutRedirect' => array('controller' => 'users', 'action' => 'login', 'management' => true, 'plugin' => 'toasty_core')
         )
     );
@@ -22,9 +23,7 @@ class ToastyCoreAppController extends AppController {
             $newArray[$key] = $value;
             
         }
-        
-       
-        
+                
         return $newArray;
         
     }
@@ -58,9 +57,6 @@ class ToastyCoreAppController extends AppController {
             $this->Components->unload('Auth');
 
         }
-
-
-        
         
         $prefix = "";
         if (isset($this->request->params['prefix'])) {

@@ -9,11 +9,16 @@ class ToastyCoreAppModel extends AppModel {
     public $name = 'ToastyCoreAppModel';
     public $base_path;    
 
-    protected function checkId($id) {
-
+    protected function checkId($id = null) {
         if (!$id) {
             $id = $this->id;
         }
+
+        if (!$id) {
+            $id = $this->data[$this->alias]['id'];
+        }
+
+
 
         if (!$id) {
             throw new Exception("An Id must be provided");

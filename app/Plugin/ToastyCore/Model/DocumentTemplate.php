@@ -11,6 +11,8 @@ class DocumentTemplate extends ToastyCoreAppModel {
         'name' => array(
             'notEmpty' => array(
                 'rule' => 'notEmpty',
+                'message' => 'A name is required.',
+                'required' => true
             ),
             'isUnique' => array(
                 'rule' => 'isUnique',
@@ -232,6 +234,11 @@ class DocumentTemplate extends ToastyCoreAppModel {
             }
         }
 
+        if ($data[$this->alias]['system_path'] == 'test') {
+            return true;
+        }
+
+
         $path = TMP . 'toasty' . DS;
         $path = str_replace("/", "\/", $path);
 
@@ -278,7 +285,6 @@ class DocumentTemplate extends ToastyCoreAppModel {
         }
 
         return false;
-
 
 
     }
@@ -348,6 +354,13 @@ class DocumentTemplate extends ToastyCoreAppModel {
 
         $full_name = '';
         if (is_array($data)) {
+
+            if (empty($data['content'])) {
+                // nothing to validate;
+                return true;
+
+            }
+
             $full_name = $this->writeTemplate($data['content']);
         } else {
             $full_name = $data;
@@ -383,7 +396,12 @@ class DocumentTemplate extends ToastyCoreAppModel {
             return true;
         }
 
+        if (!isset($this->data[$this->name]['id'])) {
+            return true;
+        }
+
         $search_id = $this->data[$this->name]['id'];
+
 
         $options = array(
             'parent_id' => $parent_id,

@@ -112,6 +112,11 @@ Router::connect(
 Router::connect(
     '/content/**',
     array('controller' => 'contents', 'action' => 'view', 'plugin' => 'toasty_core')
+);
+
+Router::connect(
+    '/templates/**',
+    array('controller' => 'main', 'action' => 'templates', 'plugin' => 'toasty_core')
 )
 
 ?>
