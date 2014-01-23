@@ -8,7 +8,8 @@
 $description = 'Site Management';
 
 
-$viewSiteLink = $this->Html->link("View Site", "/toasty_core/site");
+$viewSiteLink = $this->Html->link("View Site", "/");
+$brand = $this->Html->link($site_name, "/", array('class' => 'brand'));
 
 ?>
 <!DOCTYPE html>
@@ -37,7 +38,7 @@ $viewSiteLink = $this->Html->link("View Site", "/toasty_core/site");
         <header id="management-header">
             <div id="site-nav" class="navbar  navbar-inverse navbar-static-top">
                 <div class="navbar-inner">
-                    <a class="brand"><?=$site_name?></a>
+                    <?=$brand?>
                     
                     <ul class="nav pull-right">
                       <li><?=$viewSiteLink?></li>
