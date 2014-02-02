@@ -1,293 +1,518 @@
 'use strict';
 
 /* Controllers */
-var DocumentTypeSelectionModalCtrl = ['$scope', '$modalInstance', '$http', function($scope, $modalInstance, $http) {
+var ConfirmationModalCtrl = ['$scope', '$modalInstance', '$http', 'model',
+    function($scope, $modalInstance, $http, model) {
 
-	$scope.items = [];
-	$scope.selected = {
-		item: $scope.items[0]
-	};
+        $scope.ok = function() {
+            $modalInstance.close();
+        };
 
-	function onGetError(data) {
+        $scope.cancel = function() {
+            $modalInstance.dismiss('cancel');
+        };
 
-		console.log('Error');
-	}
 
-	function onGetSuccess(data) {
+    }
+];
 
-		$scope.items = data.document_types;
+var DocumentTypeSelectionModalCtrl = ['$scope', '$modalInstance', '$http', 'model', 'currentDocumentType',
+    function($scope, $modalInstance, $http, model, currentDocumentType) {
 
-	}
+        $scope.items = [];
+        $scope.currentDocumentType = currentDocumentType;
+        $scope.selected = {
+            item: $scope.items[0]
+        };
 
-	$scope.ok = function () {
-		$modalInstance.close($scope.selected.item);
-	};
+        function onGetError(data) {
 
-	$scope.cancel = function () {
-		$modalInstance.dismiss('cancel');
-	};
+            console.log('Error');
+        }
 
-	$http.get('/toasty_core/document_types/index.json').success(onGetSuccess).error(onGetError);
+        function onGetSuccess(data) {
 
-}];
+            $scope.items = data.document_types;
 
-var DocumentsCtrl = ['$scope', '$rootScope', '$location', '$routeParams', '$http', '$modal', 'flashService', function($scope, $rootScope, $location, $routeParams, $http, $modal, flashSvc) {
+        }
 
-	
+        $scope.ok = function() {
+            $modalInstance.close($scope.selected.item);
+        };
 
+        $scope.cancel = function() {
+            $modalInstance.dismiss('cancel');
+        };
 
-	function onGetError(data) {
+        $http.get('/toasty_core/document_types/index.json').success(onGetSuccess).error(onGetError);
 
-		console.log('Error');
-	}
+    }
+];
 
-	function onGetSuccess(data) {
+var DocumentSelectionModalCtrl = ['$scope', '$modalInstance', '$http', 'model', 'currentDocument',
+    function($scope, $modalInstance, $http, model, currentDocument) {
 
-		if (data.documents) {
-			$scope.documents = data.documents;
-		}
+        $scope.items = [];
+        $scope.currentDocument = currentDocument;
+        $scope.selected = {
+            item: currentDocument.parent
+        };
 
-	}
+        function onGetError(data) {
 
-	function createDocument () {
-		$location.path("/documents/add");
-	}
+            console.log('Error');
+        }
 
-	$scope.createDocument = createDocument;
+        function onGetSuccess(data) {
 
-	$scope.documents = [];
+            $scope.document = data.document;
+            $scope.selected.item = data.document;
 
-	$scope.alerts = [];
-	(function() {
-		var alert = flashSvc.readAlert();
-		while (alert) {
-			$scope.alerts.push(alert);
-			alert = flashSvc.readAlert();
-		}
-	})();
-	$rootScope.$on('onNewAlert', function(e, alert) {
-		flashSvc.readAlert();
-		$scope.alerts.push(alert);
-	});
+        }
 
-	$scope.closeAlert = function(index) {
-		$scope.alerts.splice(index, 1);
-	}
+        function onGetIndexSuccess(data) {
+            $scope.document = {
+                children: data.documents
+            };
+            $scope.selected.item = data.documents[0];
+        }
 
-	$http.get('/toasty_core/documents/index.json').success(onGetSuccess).error(onGetError);
+        $scope.ok = function() {
+            $modalInstance.close($scope.selected.item);
+        };
 
+        $scope.cancel = function() {
+            $modalInstance.dismiss('cancel');
+        };
 
-}];
+        function changeDocument(documentId) {
 
+            if (documentId) {
 
-var DocumentEditCtrl = ['$scope', '$rootScope', '$location', '$routeParams', '$http', '$modal', 'flashService', function($scope, $rootScope, $location, $routeParams, $http, $modal, flashSvc) {
-	
-	$scope.document = {};
-	$scope.vm = {};
+                $http.get('/toasty_core/documents/view/' + documentId + '.json').success(onGetSuccess).error(onGetError);
+            } else {
+                
+                $http.get('/toasty_core/documents/index.json').success(onGetIndexSuccess).error(onGetError);
+            }
 
-	
-		
-	function onGetError(data) {
+        }
 
-		flashSvc.addAlert("Error","danger");
+        function selectNone(i) {
+            $scope.selected.item = $scope.document;
+        }
 
-	}
+        $scope.changeDocument = changeDocument;
+        $scope.selectNone = selectNone;
 
-	function onGetSuccess(data) {
+        if (currentDocument.parent) {
 
-		if (data.document) {
-			$scope.document = data.document;
+            changeDocument(currentDocument.parent.Document.id);
+        } else {
+            changeDocument();
+        }
 
-			$scope.document.Document.published = parseInt($scope.document.Document.published);
 
-			$scope.vm.documentPublished = data.document.Document.published;
 
-			$scope.document.Document.home_page = parseInt($scope.document.Document.home_page);
-		}
+    }
+];
 
-	}
+var DocumentsCtrl = ['$scope', '$rootScope', '$location', '$routeParams', '$http', '$modal', 'flash', 'model',
+    function($scope, $rootScope, $location, $routeParams, $http, $modal, flash, model) {
 
-	function onSaveSuccess(data, status) {
+        function onGetError(data) {
 
-		if ($routeParams.documentId) {
-			$scope.document = data.document;
-			$scope.vm.documentPublished = data.document.Document.published;
-			
-			flashSvc.addAlert("The doument was saved successfully", "success");
-		} else {
-			var path = "/documents/edit/" + data.document.Document.id;
-			flashSvc.addAlert("The doument was saved successfully", "success", function() {
+            console.log('Error');
+        }
 
-				$location.path(path);
-				
-			});
+        function onGetSuccess(data) {
 
-		}
+            if (data.documents) {
+                $scope.documents = data.documents;
+            }
 
-	}
+        }
 
-	function onSaveError(data) {
+        function createDocument() {
+            $location.path("/documents/add");
+        }
 
-		for(var error in data.errors) {
+        $scope.createDocument = createDocument;
 
-			var errors = data.errors[error];
-			for(var error in errors) {
+        $scope.documents = [];
 
-				flashSvc.addAlert(errors[error],"danger");
+        $scope.alerts = [];
+        (function() {
+            var alert = flash.readAlert();
+            while (alert) {
+                $scope.alerts.push(alert);
+                alert = flash.readAlert();
+            }
+        })();
+        $rootScope.$on('onNewAlert', function(e, alert) {
+            flash.readAlert();
+            $scope.alerts.push(alert);
+        });
 
-			}
-			
-		}
+        $scope.closeAlert = function(index) {
+            $scope.alerts.splice(index, 1);
+        }
 
-	}
+        $http.get('/toasty_core/documents/index.json').success(onGetSuccess).error(onGetError);
 
-	function onDeleteSuccess(data, status) {
+    }
+];
 
-		if (200 == status) {
-			var path = "";
-				
-			path = "/documents";
 
-			flashSvc.addAlert("The document was successfully deleted","success", function() {
+var DocumentEditCtrl = ['$scope', '$rootScope', '$location', '$routeParams', '$http', '$modal', 'flash', 'model',
+    function($scope, $rootScope, $location, $routeParams, $http, $modal, flash, model) {
 
-				$location.path(path);
+        $scope.document = {};
+        $scope.vm = {};
 
-			});
 
-		}
 
-	}
+        function onGetError(data) {
 
-	function onDeleteError(data) {
+            flash.addAlert("Error", "danger");
 
-		flashSvc.addAlert(data.error,"danger");
-	}
+        }
 
-	function saveDocument() {
+        function onGetSuccess(data) {
 
-		if ($routeParams.documentId) {
+            if (data.document) {
+                $scope.document = data.document;
 
-			$http.put('/toasty_core/documents/edit/' + $routeParams.documentId + ".json", $scope.document).success(onSaveSuccess).error(onSaveError);
+                $scope.document.Document.published = parseInt($scope.document.Document.published);
 
-		} else {
-			saveNewDocument();
-		}
+                $scope.vm.documentPublished = data.document.Document.published;
 
-	}
+                $scope.document.Document.home_page = parseInt($scope.document.Document.home_page);
+            }
 
-	function saveNewDocument() {
-		
-		$http.post('/toasty_core/documents/add.json', $scope.document).success(onSaveSuccess).error(onSaveError);
-	}
+        }
 
-	function cancelChanges() {
+        function onSaveSuccess(data, status) {
 
-		$location.path("/documents/");
+            if ($routeParams.documentId) {
+                $scope.document = data.document;
+                $scope.vm.documentPublished = data.document.Document.published;
 
-	}
+                flash.addAlert("The doument was saved successfully", "success");
+            } else {
+                var path = "/documents/edit/" + data.document.Document.id;
+                flash.addAlert("The doument was saved successfully", "success", function() {
 
-	function deleteDocument() {
+                    $location.path(path);
 
-		$http.delete('/toasty_core/documents/delete/' + $routeParams.documentId + ".json", $scope.document).success(onDeleteSuccess).error(onDeleteError);
+                });
 
+            }
 
-	}
+        }
 
-	function onDocumentTypeSelected(documentType) {
+        function onSaveError(data) {
 
-		$scope.document = {
+            for (var error in data.errors) {
 
-			Document: {
-				document_type_id: documentType.DocumentType.id
-			},
-			DocumentType: documentType
+                var errors = data.errors[error];
+                for (var error in errors) {
 
-		};
+                    flash.addAlert(errors[error], "danger");
 
-	}
+                }
 
-	function onDocumentTypeNotSelected() {
+            }
 
-		flashSvc.addAlert("Please select a document type","danger", function() {
+        }
 
-			$location.path("/documents");
-		});
+        function onDeleteSuccess(data, status) {
 
+            if (200 == status) {
+                var path = "";
 
-	}
+                path = "/documents";
 
-	function createDocument() {
+                flash.addAlert("The document was successfully deleted", "success", function() {
 
-		// open modal to select for available document types
-		var modalInstance = $modal.open({
-	      templateUrl: '/templates/documents/modal/document_type',
-	      controller: DocumentTypeSelectionModalCtrl,
-	      resolve: {
-	      }
-	    });
+                    $location.path(path);
 
-	    modalInstance.result.then(onDocumentTypeSelected, onDocumentTypeNotSelected);
-	    
-	}
+                });
 
-	$scope.alerts = [];
-	(function() {
-		var alert = flashSvc.readAlert();
-		while (alert) {
-			$scope.alerts.push(alert);
-			alert = flashSvc.readAlert();
-		}
-	})();
-	$rootScope.$on('onNewAlert', function(e, alert) {
-		flashSvc.readAlert();
-		$scope.alerts.push(alert);
-	});
+            }
 
-	$scope.closeAlert = function(index) {
-		$scope.alerts.splice(index, 1);
-	}
+        }
 
-	$scope.saveDocument = saveDocument;
-	$scope.saveNewDocument = saveNewDocument;
-	$scope.cancelChanges = cancelChanges;
-	$scope.deleteDocument = deleteDocument;
+        function onDeleteError(data) {
 
+            flash.addAlert(data.error, "danger");
+        }
 
-	$scope.isPublishedClass = "";
-	$scope.isHomepageClass = "";
- 	
+        function saveDocument() {
 
-    $scope.$watch('document.Document.home_page', function(newValue) {
-    	if (newValue) {
-    		$scope.isHomepageClass = "btn-primary";
-    		$scope.isHomepageText= "Current Homepage";
-    	} else {
-    		$scope.isHomepageClass = "";
-    		$scope.isHomepageText= "Set as homepage";
+            if ($routeParams.documentId) {
 
-    	}
-    });
+                $http.put('/toasty_core/documents/edit/' + $routeParams.documentId + ".json", $scope.document).success(onSaveSuccess).error(onSaveError);
 
-    $scope.$watch('document.Document.published', function(newValue) {
-    	if (newValue) {
-    		$scope.isPublishedClass = "btn-primary";
-    		$scope.isPublishedText = "Document Published";
-    	} else {
-    		$scope.isPublishedClass = "";
-    		$scope.isPublishedText = "Publish this document";
+            } else {
+                saveNewDocument();
+            }
 
-    	}
-    });
+        }
 
-	if ($routeParams.documentId) {
-		$http.get('/toasty_core/documents/view/' + $routeParams.documentId + '.json').success(onGetSuccess).error(onGetError);
-	} else {
-		createDocument();
-	}
+        function saveNewDocument() {
 
+            $http.post('/toasty_core/documents/add.json', $scope.document).success(onSaveSuccess).error(onSaveError);
+        }
 
-}];
+        function formDirty() {
+            return $scope.cmsForm.documentName.$dirty ||
+                $scope.cmsForm.documentAlias.$dirty ||
+                $scope.cmsForm.documentPublished.$dirty ||
+                $scope.cmsForm.documentIsHomepage.$dirty;
+        }
+
+        function cancelChanges() {
+
+            function callback() {
+
+                $location.path("/documents/");
+            }
+            if (formDirty()) {
+                confirmCancel(callback)
+            } else {
+                callback();
+            }
+
+
+        }
+
+        function confirmDelete(onOkay, onCancel) {
+
+            var modalInstance = $modal.open({
+                templateUrl: '/templates/documents/modal/confirm_delete',
+                controller: ConfirmationModalCtrl,
+                resolve: {
+
+                }
+            });
+
+            modalInstance.result.then(onOkay, onCancel);
+
+        }
+
+        function confirmCancel(onOkay, onCancel) {
+
+            var modalInstance = $modal.open({
+                templateUrl: '/templates/documents/modal/confirm_cancel',
+                controller: ConfirmationModalCtrl,
+                resolve: {}
+            });
+
+            modalInstance.result.then(onOkay, onCancel);
+
+        }
+
+        function deleteDocument() {
+
+            function callback() {
+
+                $http.delete('/toasty_core/documents/delete/' + $routeParams.documentId + ".json", $scope.document).success(onDeleteSuccess).error(onDeleteError);
+
+            }
+
+            confirmDelete(callback)
+
+
+
+        }
+
+        function onGetParentSuccess(data) {
+
+            var parentDocument = data.document;
+            console.log(parentDocument);
+
+            if (!$scope.document.Document) {
+                $scope.document.Document = {};
+            }
+
+            $scope.document.parent = parentDocument;
+            $scope.document.Document.parent_id = parentDocument.Document.id;
+            $scope.document.Document.document_type_id = parentDocument.Document.document_type_id;
+            $scope.document.DocumentType = parentDocument.DocumentType;
+
+        }
+
+        function onGetParentError(error, status) {
+
+            flash.addAlert('There was an error retrieving the parent document. Error: ' + status, 'danger');
+
+            getDocumentType();
+
+        }
+
+        function getDocument(id, success, error) {
+
+            $http.get('/toasty_core/documents/view/' + id + '.json').success(success).error(error);
+        }
+
+        function onDocumentTypeSelected(documentType) {
+
+            setDocumentType(documentType);
+
+            function setDocumentType(documentType) {
+
+                if (!$scope.document.Document) {
+                    $scope.document.Document = {};
+                }
+
+                $scope.document.Document.document_type_id = documentType.DocumentType.id;
+                $scope.document.DocumentType = documentType;
+
+            }
+
+
+        }
+
+        function onDocumentParentSelected(documentParent) {
+
+            setDocumentParent(documentParent);
+
+            function setDocumentParent(documentParent) {
+
+                if (!$scope.document.Document) {
+                    $scope.document.Document = {};
+                }
+
+                $scope.document.Document.parent_id = documentParent.Document.id;
+                $scope.document.parent = documentParent;
+
+            }
+
+        }
+
+        function onDocumentParentNotSelected() {
+
+        }
+
+        function onDocumentTypeNotSelected() {
+
+            flash.addAlert("Please select a document type", "danger", function() {
+
+                $location.path("/documents");
+            });
+
+
+        }
+
+        function getDocumentType(dontRedirect) {
+
+            var modalInstance = $modal.open({
+                templateUrl: '/templates/documents/modal/document_type',
+                controller: DocumentTypeSelectionModalCtrl,
+                resolve: {
+                    currentDocumentType: function() {
+                        return $scope.document.DocumentType;
+                    }
+                }
+            });
+            modalInstance.result.then(onDocumentTypeSelected, dontRedirect || onDocumentTypeNotSelected);
+
+        }
+
+        function getDocumentParent() {
+            var modalInstance = $modal.open({
+                templateUrl: '/templates/documents/modal/document',
+                controller: DocumentSelectionModalCtrl,
+                resolve: {
+                    currentDocument: function() {
+                        return $scope.document;
+                    }
+                }
+            });
+            modalInstance.result.then(onDocumentParentSelected);
+        }
+
+        function createDocument() {
+
+            // open modal to select for available document types
+
+            if ($routeParams.parentId) {
+
+                getDocument($routeParams.parentId, onGetParentSuccess, onGetParentError);
+
+            } else {
+
+                getDocumentType();
+
+
+            }
+
+        }
+
+        $scope.alerts = [];
+        (function() {
+            var alert = flash.readAlert();
+            while (alert) {
+                $scope.alerts.push(alert);
+                alert = flash.readAlert();
+            }
+        })();
+        $rootScope.$on('onNewAlert', function(e, alert) {
+            flash.readAlert();
+            $scope.alerts.push(alert);
+        });
+
+        $scope.closeAlert = function(index) {
+            $scope.alerts.splice(index, 1);
+        }
+
+        $scope.saveDocument = saveDocument;
+        $scope.saveNewDocument = saveNewDocument;
+        $scope.cancelChanges = cancelChanges;
+        $scope.deleteDocument = deleteDocument;
+        $scope.getDocumentType = getDocumentType;
+        $scope.getDocumentParent = getDocumentParent;
+
+
+        $scope.isPublishedClass = "";
+        $scope.isHomepageClass = "";
+
+
+        $scope.$watch('document.Document.home_page', function(newValue) {
+            if (newValue) {
+                $scope.isHomepageClass = "btn-primary";
+                $scope.isHomepageText = "Current Homepage";
+            } else {
+                $scope.isHomepageClass = "";
+                $scope.isHomepageText = "Set as homepage";
+
+            }
+        });
+
+        $scope.$watch('document.Document.published', function(newValue) {
+            if (newValue) {
+                $scope.isPublishedClass = "btn-primary";
+                $scope.isPublishedText = "Document Published";
+            } else {
+                $scope.isPublishedClass = "";
+                $scope.isPublishedText = "Publish this document";
+
+            }
+        });
+
+        if ($routeParams.documentId) {
+            $http.get('/toasty_core/documents/view/' + $routeParams.documentId + '.json').success(onGetSuccess).error(onGetError);
+        } else {
+            createDocument();
+        }
+
+
+    }
+];
 
 angular.module('toastyCMS')
-.controller('DocumentsCtrl', DocumentsCtrl)
-.controller('DocumentEditCtrl', DocumentEditCtrl);
+    .controller('DocumentsCtrl', DocumentsCtrl)
+    .controller('DocumentEditCtrl', DocumentEditCtrl)
+    .controller('ConfirmationModalCtrl', ConfirmationModalCtrl)
+    .controller('DocumentTypeSelectionModalCtrl', DocumentTypeSelectionModalCtrl)
+    .controller('DocumentSelectionModalCtrl', DocumentSelectionModalCtrl);

@@ -33,22 +33,28 @@ class DocumentsController extends ToastyCoreAppController {
         }
 
         $document = $this->Document->findById($id);
-        $document['children'] = $this->Document->children($id);
+        $document['children'] = $this->Document->children($id, true);
         $document['parent'] = $this->Document->getParentNode($id);
 
         $tmp = $document['DocumentType'];
         $document['DocumentType'] = array();
         $document['DocumentType']['DocumentType'] = $tmp;
+
+
         $document['DocumentType']['DocumentTypeProperty'] = $this->Document->DocumentType->DocumentTypeProperty->find(
             'all', 
             array(
                 'conditions' => array(
-                    'DocumentTypeProperty.id' => $document['Document']['document_type_id']
+                    'DocumentTypeProperty.document_type_id' => $tmp['id']
                 )
             )
         );
 
-        $document['Document']['path'] = $this->Document->getPathFromId($id);
+        $pathStack = $this->Document->getStack($id, $this->Document->getDefaultMappingFunction());
+        $document['Document']['path'] = array(
+            'stack' => $pathStack,
+            'string' => $this->Document->stackToString($pathStack)
+        );
 
 
     	$this->set(compact('document'));

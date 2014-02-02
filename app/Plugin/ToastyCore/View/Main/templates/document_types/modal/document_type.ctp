@@ -3,7 +3,7 @@
 </div>
 <div class="modal-body">
   <div class="tgrid">
-    <div ng-if="document_type.DocumentType.id != currentDocumentType.id" class="grid-item{{selected.item == document_type ? ' active': ''}}" ng-repeat="document_type in items" ng-click="selected.item = document_type">
+    <div class="grid-item{{selected.item == document_type ? ' active': ''}}" ng-repeat="document_type in items" ng-click="selected.item = document_type">
           <span class="item-icon glyphicon glyphicon-file"></span>
           <div class="caption">
             <a>{{document_type.DocumentType.name}}</a>

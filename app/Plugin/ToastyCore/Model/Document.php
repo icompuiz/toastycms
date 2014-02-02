@@ -356,17 +356,31 @@ class Document extends ToastyCoreAppModel {
         return $templates;
     }
 
-    public function getPathFromId($document_id = null) {
+    public function getDefaultMappingFunction() {
 
-        $mapping_function = function($node) {
+        $defaultMappingFunction = function($node) {
 
             $alias =  $node['Document']['alias'];
             return $alias;
         };
+        return $defaultMappingFunction;
+    }
 
-        $path = $this->getStack($document_id, $mapping_function);
+    public function getPathFromId($document_id = null) {
 
-        $path = implode(DS, $path);
+        $mapping_function = $this->getDefaultMappingFunction();
+
+        $stack = $this->getStack($document_id, $mapping_function);
+
+        $path = $this->pathStackToString($stack);
+
+        return $path;
+
+    }
+
+    public function stackToString($stack) {
+
+        $path = implode(DS, $stack);
 
         return $path;
 
@@ -471,6 +485,16 @@ class Document extends ToastyCoreAppModel {
         );
 
         $this->updatePublished($document);
+
+    }
+
+    public function beforeFind($query) {
+        // debug($query);
+    }
+
+    public function afterFind($results, $primary = false) {
+
+
 
     }
 

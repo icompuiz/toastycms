@@ -18,6 +18,7 @@ class DocumentTypesController extends ToastyCoreAppController {
 		$this->set('_serialize', array('document_types'));
 
 		$this->render('index');
+
 	}
 
 
@@ -47,7 +48,7 @@ class DocumentTypesController extends ToastyCoreAppController {
 		$this->request->onlyAllow('post');
 
 		$this->DocumentType->create();
-        $document_type = $this->DocumentType->save($this->data);
+        $document_type = $this->DocumentType->save($this->request->data);
 
         if (!$document_type) {
         	$document_type = 'There were errors while saving the document type';
@@ -66,11 +67,29 @@ class DocumentTypesController extends ToastyCoreAppController {
             throw new NotFoundException(__('Document not found'));
         }
 
-        $document_type = $this->DocumentType->save($this->data);
+        // debug($this->request->data); exit;
+
+        $document_type = $this->DocumentType->saveAssociated($this->request->data);
+
+        unset($this->request->data['Document']);
 
         if (!$document_type) {
 
         	$document_type = 'There were errors while saving the document type';
+
+        } else {
+
+        	if (isset($this->request->data['deletedProperties'])) {
+
+        		foreach ($this->request->data['deletedProperties'] as $property) {
+
+        			$this->DocumentType->DocumentTypeProperty->delete($property['id']);
+
+        		}
+
+        	}
+        	
+        	$document_type = $this->DocumentType->findById($id);
 
         }
 

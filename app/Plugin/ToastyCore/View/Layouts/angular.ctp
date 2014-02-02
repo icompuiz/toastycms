@@ -58,9 +58,11 @@
         'ToastyCore.cms/lib/components/bootstrap-switch/module',
         'ToastyCore.cms/lib/components/bootstrap-switch/bsSwitch',
         'ToastyCore.cms/app',
-        'ToastyCore.cms/services/flashservice',
+        'ToastyCore.cms/services/flash',
+        'ToastyCore.cms/services/model',
         'ToastyCore.cms/controllers/dashboard',
-        'ToastyCore.cms/controllers/documents'
+        'ToastyCore.cms/controllers/documents',
+        'ToastyCore.cms/controllers/document_types',
         )
     );
     echo $this->fetch('scripts');

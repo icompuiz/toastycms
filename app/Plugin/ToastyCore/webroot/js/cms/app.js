@@ -20,7 +20,7 @@ config(['$routeProvider', function($routeProvider) {
 
 
   .when(
-  	'/documents/add/:meta?', 
+  	'/documents/add/:parentId?', 
   	{
 	  	templateUrl: '/templates/documents/add', 
 	  	controller: 'DocumentEditCtrl'
@@ -28,7 +28,7 @@ config(['$routeProvider', function($routeProvider) {
   )
 
   .when(
-  	'/documents/edit/:documentId/:meta?', 
+  	'/documents/edit/:documentId', 
   	{
 	  	templateUrl: '/templates/documents/edit', 
 	  	controller: 'DocumentEditCtrl'
@@ -36,7 +36,7 @@ config(['$routeProvider', function($routeProvider) {
   )
   
   .when(
-  	'/documents/:meta?', 
+  	'/documents', 
   	{
 	  	templateUrl: '/templates/documents/index', 
 	  	controller: 'DocumentsCtrl'
@@ -71,7 +71,7 @@ config(['$routeProvider', function($routeProvider) {
   	'/document_types/edit/:documentTypeId', 
   	{
 	  	templateUrl: '/templates/document_types/edit', 
-	  	controller: 'DocumentTypesCtrl'
+	  	controller: 'DocumentTypeEditCtrl'
   	})
   ;
 
