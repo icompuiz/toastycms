@@ -41,12 +41,19 @@ class ContentsController extends ToastyCoreAppController {
     public function management_index() {
 
         $options = array(
+            'conditions' => array(
+                'Content.parent_content_id' => 0
+            ),
             'order' => array(
                 'Content.sort',
                 'Content.created'
             )
         );
+
         $contents = $this->Content->find('all', $options);
+        // pr($contents);
+        // exit;
+
 
         $organized = array();
         $root = array();

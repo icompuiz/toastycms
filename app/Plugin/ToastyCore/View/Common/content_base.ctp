@@ -150,7 +150,7 @@ $this->start('management-left');
     </div>
 </div>
 
-<?
+<?php
 $this->end();
 
 $this->start('script');

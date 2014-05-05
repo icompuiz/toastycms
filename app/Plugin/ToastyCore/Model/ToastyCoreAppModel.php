@@ -233,7 +233,7 @@ class ToastyCoreAppModel extends AppModel {
 
     }
 
-    protected function generateRandomString($length = 10) {
+    public function generateRandomString($length = 10) {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $randomString = '';
         for ($i = 0; $i < $length; $i++) {
